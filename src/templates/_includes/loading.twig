@@ -1,0 +1,7 @@
+{% hook 'stripe-express-checkout.loading' %}
+
+{% if include is defined %}
+  {% include include %}
+{% else %}
+  Loading Stripe...
+{% endif %}

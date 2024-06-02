@@ -1,0 +1,50 @@
+{
+    "name": "craft-unit/craft-stripe-express-checkout",
+    "description": "Adding the Stripe Express Checkout to Commerce-Stripe.",
+    "type": "craft-plugin",
+    "license": "mit",
+    "support": {
+        "email": "technik@craft-unit.de"
+    },
+    "require": {
+        "php": ">=8.2",
+        "craftcms/cms": "^5.0.0",
+        "craftcms/commerce": "^5.0.0",
+        "craftcms/commerce-stripe": "^5.0.0"
+    },
+    "require-dev": {
+        "codeception/codeception": "^5.1",
+        "codeception/module-asserts": "*",
+        "codeception/module-phpbrowser": "*",
+        "codeception/module-yii2": "^1.1",
+        "craftcms/ecs": "dev-main",
+        "craftcms/phpstan": "dev-main",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "craftunit\\craftstripeexpresscheckout\\": "src/"
+        }
+    },
+    "extra": {
+        "handle": "stripe-express-checkout",
+        "name": "Stripe Express Checkout",
+        "developer": "Craft-Unit",
+        "documentationUrl": ""
+    },
+    "scripts": {
+        "check-cs": "ecs check --ansi",
+        "fix-cs": "ecs check --ansi --fix",
+        "phpstan": "phpstan --memory-limit=1G"
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2"
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true,
+            "craftcms/plugin-installer": true
+        }
+    }
+}

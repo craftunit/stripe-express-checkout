@@ -1,0 +1,47 @@
+{% set additionalLoaderClasses = options['loaderClasses'] ?? '' %}
+{% set defaultLoaderClasses = 'stripe-express-loading' %}
+{% if additionalLoaderClasses %}
+  {% set loaderClasses = defaultLoaderClasses ~ ' ' ~ additionalLoaderClasses %}
+{% else %}
+  {% set loaderClasses = defaultLoaderClasses %}
+{% endif %}
+
+{% set additionalErrorClasses = options['errorClasses'] ?? '' %}
+{% set defaultErrorClasses = 'stripe-express-error' %}
+{% if additionalErrorClasses %}
+  {% set errorClasses = defaultErrorClasses ~ ' ' ~ additionalErrorClasses %}
+{% else %}
+  {% set errorClasses = defaultErrorClasses %}
+{% endif %}
+
+{% set additionalElementClasses = options['elementClasses'] ?? '' %}
+{% set defaultElementClasses = 'stripe-express-element' %}
+{% if additionalElementClasses %}
+  {% set elementClasses = defaultElementClasses ~ ' ' ~ additionalElementClasses %}
+{% else %}
+  {% set elementClasses = defaultElementClasses %}
+{% endif %}
+
+{% set additionalClasses = options['classes'] ?? '' %}
+{% set defaultClasses = 'stripe-express' %}
+{% if additionalClasses %}
+  {% set classes = defaultClasses ~ ' ' ~ additionalClasses %}
+{% else %}
+  {% set classes = defaultClasses %}
+{% endif %}
+
+<div
+  class="{{ classes }}"
+  data-express-id="{{ id }}"
+  {% if name is defined %}data-express-name="{{ name }}"{% endif %}
+">
+  <div class="{{ loaderClasses }}">
+    {% if options['loaderTemplate'] is defined and options['loaderTemplate'] | length %}
+      {% include options['loaderTemplate'] %}
+    {% else %}
+      {% include 'stripe-express-checkout/_includes/loading' %}
+    {% endif %}
+  </div>
+  <div class="{{ errorClasses }}"></div>
+  <div class="{{ elementClasses }}"></div>
+</div>

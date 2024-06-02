@@ -1,0 +1,20 @@
+{% import '_includes/forms' as forms %}
+
+<div id="pay-pal" class="hidden">
+  {% namespace 'settings' %}
+    {{ forms.selectField({
+      name: 'paypalTheme',
+      label: 'Theme',
+      options: paypal.themes,
+      value: settings.paypalTheme,
+      instructions: 'The theme of the PayPal button.'
+    }) }}
+    {{ forms.selectField({
+      name: 'paypalType',
+      label: 'Type',
+      options: paypal.types,
+      value: settings.paypalType,
+      instructions: 'The type of the PayPal button.'
+    }) }}
+  {% endnamespace %}
+</div>

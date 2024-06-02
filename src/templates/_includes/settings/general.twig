@@ -1,0 +1,77 @@
+{% import '_includes/forms' as forms %}
+
+<div id="general" class="hidden">
+  {% namespace 'settings' %}
+    {{ forms.selectField({
+      name: 'overflow',
+      label: 'Overflow',
+      options: overflow,
+      value: settings.overflow,
+      instructions: 'Choose how the overflow should be handled.',
+      errors: settings.getErrors('overflow')
+    }) }}
+    {# TODO: Styling? Min nums and stuff? #}
+
+    {{
+      forms.field({
+          label: 'Button Height',
+          instructions: 'The height of the buttons.',
+          errors: settings.getErrors('buttonHeight'),
+        },
+        input('number', 'buttonHeight', settings.buttonHeight)
+          | attr({
+            class: "text",
+            min: 40,
+            max: 55
+          })
+      )
+    }}
+
+    {{
+      forms.field({
+          label: 'Max Columns',
+          instructions: 'The maximum number of columns.',
+          errors: settings.getErrors('maxColumns'),
+        },
+        input('number', 'maxColumns', settings.maxColumns)
+          | attr({
+            class: "text",
+            min: 0,
+          })
+      )
+    }}
+    {{
+      forms.field({
+          label: 'Max Rows',
+          instructions: 'The maximum number of rows.',
+          errors: settings.getErrors('maxRows'),
+        },
+        input('number', 'maxRows', settings.maxRows)
+        | attr({
+          class: "text",
+          min: 0,
+          })
+        )
+    }}
+    {# TODO: use searchable input for templates #}
+    {{ forms.textField({
+      name: 'loaderTemplate',
+      label: 'Path to Loader Template',
+      instructions: 'The path to the loader template.',
+      value: settings.loaderTemplate,
+      errors: settings.getErrors('loaderTemplate')
+    }) }}
+{#    {{ forms.autosuggest({
+      containerId: 'loaderTemplate',
+      name: 'loaderTemplate',
+      label: 'Path to Loader Template',
+      instructions: 'The path to the loader template.',
+      value: settings.loaderTemplate,
+      suggestions: [
+        { value: 'foo', label: 'Foo' },
+        { value: 'bar', label: 'Bar' },
+      ]
+    }) }}#}
+
+  {% endnamespace %}
+</div>

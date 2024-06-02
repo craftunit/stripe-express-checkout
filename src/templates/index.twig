@@ -1,0 +1,38 @@
+{% extends "_layouts/cp" %}
+
+{% import "_includes/forms" as forms %}
+
+{% set fullPageForm = true %}
+{% set title = "Stripe Express Checkout Settings" %}
+{% set tabs = {
+  settings: {
+    label: 'Settings'|t('plugin-handle'),
+    url: '#settings',
+  },
+  generalAppearance: {
+    label: 'General Appearance'|t('plugin-handle'),
+    url: '#general',
+  },
+  applePay: {
+    label: 'Apple Pay'|t('plugin-handle'),
+    url: '#apple-pay',
+  },
+  googlePay: {
+    label: 'Google Pay'|t('plugin-handle'),
+    url: '#google-pay',
+  },
+  payPal: {
+    label: 'PayPal'|t('plugin-handle'),
+    url: '#pay-pal',
+  },
+} %}
+{% set selectedTab = 'settings' %}
+
+{% block content %}
+  <input type="hidden" name="action" value="stripe-express-checkout/settings/save-settings">
+  {% include 'stripe-express-checkout/_includes/settings/' %}
+  {% include 'stripe-express-checkout/_includes/settings/general' %}
+  {% include 'stripe-express-checkout/_includes/settings/google-pay' %}
+  {% include 'stripe-express-checkout/_includes/settings/apple-pay' %}
+  {% include 'stripe-express-checkout/_includes/settings/pay-pal' %}
+{% endblock %}

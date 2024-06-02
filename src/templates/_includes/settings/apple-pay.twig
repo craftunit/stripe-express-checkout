@@ -1,0 +1,27 @@
+{% import '_includes/forms' as forms %}
+
+<div id="apple-pay" class="hidden">
+  {% namespace 'settings' %}
+    {{ forms.selectField({
+      name: 'applePayTheme',
+      label: 'Theme',
+      options: applePay.themes,
+      value: settings.applePayTheme,
+      instructions: 'The theme of the Apple Pay button.'
+    }) }}
+    {{ forms.selectField({
+      name: 'applePayType',
+      label: 'Type',
+      options: applePay.types,
+      value: settings.applePayType,
+      instructions: 'The type of the Apple Pay button.'
+    }) }}
+    {{ forms.selectField({
+      name: 'showApplePay',
+      label: 'Show Button',
+      options: applePay.showWallet,
+      value: settings.showApplePay,
+      instructions: 'Show the Apple Pay button.'
+    }) }}
+  {% endnamespace %}
+</div>

@@ -1,0 +1,27 @@
+{% import '_includes/forms' as forms %}
+
+<div id="google-pay" class="hidden">
+  {% namespace 'settings' %}
+    {{ forms.selectField({
+      name: 'googlePayTheme',
+      label: 'Theme',
+      options: googlePay.themes,
+      value: settings.googlePayTheme,
+      instructions: 'The theme of the GooglePay button.'
+    }) }}
+    {{ forms.selectField({
+      name: 'googlePayType',
+      label: 'Type',
+      options: googlePay.types,
+      value: settings.googlePayType,
+      instructions: 'The type of the GooglePay button.'
+    }) }}
+    {{ forms.selectField({
+      name: 'showGooglePay',
+      label: 'Show Button',
+      options: googlePay.showWallet,
+      value: settings.showGooglePay,
+      instructions: 'Show the GooglePay button.'
+    }) }}
+  {% endnamespace %}
+</div>
