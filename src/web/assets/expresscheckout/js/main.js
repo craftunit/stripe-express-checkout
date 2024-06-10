@@ -157,10 +157,6 @@ class StripeExpressCheckout {
 
   /* HANDLE EVENTS */
   onClick = event => {
-    console.log('onClick', {
-      event,
-      'onClickResolveOptions': this.onClickResolveOptions,
-    });
     event.resolve(this.onClickResolveOptions);
   }
 
