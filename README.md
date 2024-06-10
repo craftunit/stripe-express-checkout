@@ -64,7 +64,7 @@ configure set the Gateway in the plugin settings.
 
 #### Global Settings
 You can configure all settings in the plugin settings page.
-![Stripe Express Checkout Settings Page](https://imgur.com/t0LXpSU)
+![Stripe Express Checkout Settings Page](https://i.imgur.com/t0LXpSU.png)
 
 #### Local settings
 You can also pass settings directly to the `craft.expressCheckout.buttons` function. This will override the global settings.
