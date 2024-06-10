@@ -55,29 +55,22 @@ composer require craft-unit/craft-stripe-express-checkout
 - Automatically adjusts costs based on configured shipping rules.
 - Restrict deliveries to allowed countries in your Commerce settings.
 
-**TODO: talk about some options like setting the phone number or something**
-
 ## Usage
-You render the buttons by using the `craft.expressCheckout.buttons` function. You then pass an array of options to the
-function. All options you pass the button will be passed through to the Stripe API. You can find all the options in the
-[Stripe documentation](https://docs.stripe.com/js/element/express_checkout_element). Every option you see there can be used.
 
-There are two ways to use you can use the Stripe Express Checkout.
+### Before you start
+Before you can use this plugin, you need to install the Stripe Gateway Plugin and configure it. All orders
+will be processed through the selected gateway. You can find the Stripe Gateway Plugin in the Plugin Store. Then you can
+configure set the Gateway in the plugin settings.
 
-### 1. Products page
-**TODO: Add image of product page**
-**`products/_product.twig`**
+#### Global Settings
+You can configure all settings in the plugin settings page.
+![Stripe Express Checkout Settings Page](https://imgur.com/t0LXpSU)
+
+#### Local settings
+You can also pass settings directly to the `craft.expressCheckout.buttons` function. This will override the global settings.
 ```twig
-{% set requiredParams = {
-    items: [{
-      id: variant.id,
-      qty: 1,
-    }],
-    cancelUrl: '/products/' ~ product.slug,
-    successUrl: alias('@web/success')
-} %}
-
-{% set optionalParams  = {
+{# EXAMPLE SETTINGS #}
+{% set settings  = {
     name: product.slug ~ '-express-checkout',
 
     shippingAddressRequired: true,
@@ -97,38 +90,48 @@ There are two ways to use you can use the Stripe Express Checkout.
       applePay: 'always',
       googlePay: 'always',
     }
+    {# and more... #}
 } %}
-
-{% set params = requiredParams | merge(optionalParams) %}
-{{ craft.expressCheckout.buttons(params) | raw }}
 ```
-We pass an array of `items` to the `craft.expressCheckout.buttons` function. Each item needs an id and a quantity. You
-will also need to pass a `cancelUrl` and a `successUrl`. Your `successUrl` needs to be an absolute path (TODO: not make absolute).
+
+### Rendering the buttons
+You render the buttons by using the `craft.expressCheckout.buttons` function. You then pass an array of options to the
+function. All options you pass the button will be passed through to the Stripe API. You can find all the options in the
+[Stripe documentation](https://docs.stripe.com/js/element/express_checkout_element). Every option you see there can be used.
+
+#### 1. Products page
+**TODO: Add image of product page**
+**`products/_product.twig`**
+```twig
+{{ craft.expressCheckout.buttons({
+    items: [{
+      id: variant.id,
+      qty: 1,
+    }]
+}) | raw }}
+```
+We pass an array of `items` to the `craft.expressCheckout.buttons` function.
 
 ### 2. Cart page
 **TODO: Add image of cart page**
 **`cart/cart.twig`**
 ```twig
-{{ craft.expressCheckout.buttons({
-  cart,
-  shippingAddressRequired: true,
-  cancelUrl: '/cart',
-  successUrl: alias('@web/success?number=' ~ cart.number),
-  wallets: {
-    applePay: 'always',
-    googlePay: 'always',
-  }
-}) | raw }}
+{{ craft.expressCheckout.buttons({ cart }) | raw }}
 ```
 In this example we pass our cart object directly to the `craft.expressCheckout.buttons` function. This is useful for using
 express checkout on the cart page.
+
+## Order complete (TODO: Redirect nur nach Success und webhook von stripe?)
+After the order is completed, the user will be redirected to the `success_url` you set in the options. At this point in time
+your order might not be completed in Craft Commerce hence why you won't see the completed order. You can use  `fetch` to 
+ask for the order and return it to the success page.
 
 ## Configuration
 ### Stripe Gateway
 After installing the plugin, go to the plugin settings page and select your configured Stripe gateway. This plugin will
 then pass everything to the selected gateway.
 
-### Commerce 
+### Commerce (TODO: Brauchen wir das noch? In meinem craftshop brauch ich kein autosetcartshipping)
 It is recommended to set `autoSetCartShippingMethodOption` to `true` in `/config/commerce.php`. This ensures a
 shipping method is set on your order.
 ```php
@@ -138,9 +141,6 @@ return [
     'autoSetCartShippingMethodOption' => true,
 ];
 ```
-### Button Options
-**TODO: Add a list/table of all the options**
-
 ### Event Hooks
 **TODO: Add a list/table of all the events and usages**
 
