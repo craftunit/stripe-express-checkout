@@ -100,24 +100,27 @@ You render the buttons by using the `craft.expressCheckout.buttons` function. Yo
 function. All options you pass the button will be passed through to the Stripe API. You can find all the options in the
 [Stripe documentation](https://docs.stripe.com/js/element/express_checkout_element). Every option you see there can be used.
 
-#### 1. Products page
-**TODO: Add image of product page**
+### Products page
+![Product Page](https://i.imgur.com/Wxafzai.png)
 **`products/_product.twig`**
 ```twig
 {{ craft.expressCheckout.buttons({
     items: [{
-      id: variant.id,
+      id: product.defaultVariant.id,
       qty: 1,
     }]
 }) | raw }}
 ```
 We pass an array of `items` to the `craft.expressCheckout.buttons` function.
 
-### 2. Cart page
-**TODO: Add image of cart page**
+### Cart page
+![Cart Page](https://i.imgur.com/X8wQrOm.png)
 **`cart/cart.twig`**
 ```twig
-{{ craft.expressCheckout.buttons({ cart }) | raw }}
+{{ craft.expressCheckout.buttons({ 
+  cart: craft.commerce.carts.cart,
+  cancelUrl: '/cart',
+ }) | raw }}
 ```
 In this example we pass our cart object directly to the `craft.expressCheckout.buttons` function. This is useful for using
 express checkout on the cart page.
@@ -142,6 +145,7 @@ return [
     'autoSetCartShippingMethodOption' => true,
 ];
 ```
+
 ### Event Hooks
 | Klasse | Event |
 | --- | --- |
