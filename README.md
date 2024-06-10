@@ -20,11 +20,11 @@ Adding the [Stripe Express Checkout Element](https://docs.stripe.com/elements/ex
 **TODO: Add gif/webm of the express checkout; Maybe a YouTube Video showcasing the plugin would be neat**
 
 ## Requirements
-- [Stripe Account](https://stripe.com/)
-- [Craft CMS ^4.7.0](https://github.com/craftcms/cms)
+- <a href="https://stripe.com" target="_blank">Stripe Account</a>
+- <a href="https://github.com/craftcms/cms" target="_blank">Craft CMS ^4.7.0</a>
 - PHP >=8.0.2
-- [Craft Commerce ^4.0.0](https://github.com/craftcms/commerce)
-- [Craft Commerce Stripe ^4.0.0](https://github.com/craftcms/commerce-stripe)
+- <a href="https://github.com/craftmcs/commerce" target="_blank">Craft Commerce ^4.0.0</a>
+- <a href="https://github.com/craftcms/commerce-stripe" target="_blank">Craft Commerce Stripe ^4.0.0</a>
 
 ## Installation
 You can install this plugin from the Plugin Store or with Composer.
