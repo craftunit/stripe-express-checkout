@@ -20,10 +20,11 @@ Adding the [Stripe Express Checkout Element](https://docs.stripe.com/elements/ex
 **TODO: Add gif/webm of the express checkout; Maybe a YouTube Video showcasing the plugin would be neat**
 
 ## Requirements
-- Craft CMS ^4.7.0
+- [Stripe Account](https://stripe.com/)
+- [Craft CMS ^4.7.0](https://github.com/craftcms/cms)
 - PHP >=8.0.2
-- Craft Commerce ^4.0.0
-- Craft Commerce Stripe ^4.0.0
+- [Craft Commerce ^4.0.0](https://github.com/craftcms/commerce)
+- [Craft Commerce Stripe ^4.0.0](https://github.com/craftcms/commerce-stripe)
 
 ## Installation
 You can install this plugin from the Plugin Store or with Composer.
@@ -131,7 +132,7 @@ ask for the order and return it to the success page.
 After installing the plugin, go to the plugin settings page and select your configured Stripe gateway. This plugin will
 then pass everything to the selected gateway.
 
-### Commerce (TODO: Brauchen wir das noch? In meinem craftshop brauch ich kein autosetcartshipping)
+### Commerce
 It is recommended to set `autoSetCartShippingMethodOption` to `true` in `/config/commerce.php`. This ensures a
 shipping method is set on your order.
 ```php
