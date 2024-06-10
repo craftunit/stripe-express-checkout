@@ -146,6 +146,35 @@ return [
 ];
 ```
 
+### Plugin Settings
+You can configure all settings in the plugin settings page. All settings can be overridden by passing them to the
+`craft.expressCheckout.buttons` function.
+
+| Setting Name | Description |
+| --- | --- |
+| gatewayId | Select the gateway through which payments will be processed. |
+| inventoryId | Select an inventory. |
+| shippingAddressRequired | Checking this will prompt the user for their shipping address. |
+| phoneNumberRequired | Checking this box will prompt the user for their phone number. |
+| restrictCountries | Checking this will restrict the Stripe 'allowedCountries' to your country list in Commerce -> Store Settings -> Store -> Country List. |
+| successUrl | The URL that Stripe redirects to after a successful transaction. The 'successUrl' gets a query parameter called 'number' that contains the order number. |
+| cancelUrl | The URL that Stripe will redirect to after the user abandons the checkout process. By default, this is the URL the user came from. |
+| loaderTemplate | The path to the loader template. |
+| buttonHeight | The height of the buttons. |
+| applePayTheme | The theme of the Apple Pay button. |
+| googlePayTheme | The theme of the GooglePay button. |
+| paypalTheme | The theme of the PayPal button. |
+| applePayType | The type of the Apple Pay button. |
+| googlePayType | The type of the GooglePay button. |
+| paypalType | The type of the PayPal button. |
+| maxColumns | The maximum number of columns. |
+| maxRows | The maximum number of rows. |
+| overflow | Choose how the overflow should be handled. |
+| paymentMethodOrder | The order of the payment methods. |
+| showApplePay | Show the Apple Pay button. |
+| showGooglePay | Show the GooglePay button. |
+| phoneField | Map the phone number to plain text on the order field layout. This will only take effect if you enable 'Phone Number Required'. |
+
 ### Event Hooks
 | Klasse | Event |
 | --- | --- |
