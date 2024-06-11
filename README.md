@@ -135,17 +135,6 @@ ask for the order and return it to the success page.
 After installing the plugin, go to the plugin settings page and select your configured Stripe gateway. This plugin will
 then pass everything to the selected gateway.
 
-### Commerce
-It is recommended to set `autoSetCartShippingMethodOption` to `true` in `/config/commerce.php`. This ensures a
-shipping method is set on your order.
-```php
-<?php
-
-return [
-    'autoSetCartShippingMethodOption' => true,
-];
-```
-
 ### Plugin Settings
 You can configure all settings in the plugin settings page. All settings can be overridden by passing them to the
 `craft.expressCheckout.buttons` function.
