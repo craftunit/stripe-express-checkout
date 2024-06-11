@@ -117,6 +117,12 @@ class StripeExpressCheckout {
       shippingRates,
       applePay,
     };
+
+    const firstShippingMethod = shippingRates.at(0);
+    if (firstShippingMethod) {
+      console.log('firstShippingMethod', firstShippingMethod);
+      this.expressCheckoutElement.emit('shippingratechange', { shippingRate: firstShippingMethod })
+    }
   }
 
   onShippingRateChange = async event => {
