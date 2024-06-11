@@ -181,27 +181,27 @@ class ProcessStripeWebhook implements EventHandlerInterface
         $billingDetails['title'] = 'Rechnungsadresse';
         $shippingDetails['title'] = 'Lieferadresse';
 
-        if (empty($billingDetails['address']['line1']) && !empty(['address']['line1'])) {
+        if (empty($billingDetails['address']['line1']) && !empty($shippingDetails['address']['line1'])) {
             $billingDetails['address']['line1'] = $shippingDetails['address']['line1'];
         }
 
-        if (empty($billingDetails['address']['line2']) && !empty(['address']['line2'])) {
+        if (empty($billingDetails['address']['line2']) && !empty($shippingDetails['address']['line2'])) {
             $billingDetails['address']['line2'] = $shippingDetails['address']['line2'];
         }
 
-        if (empty($billingDetails['address']['state']) && !empty(['address']['state'])) {
+        if (empty($billingDetails['address']['state']) && !empty($shippingDetails['address']['state'])) {
             $billingDetails['address']['state'] = $shippingDetails['address']['state'];
         }
 
-        if (empty($billingDetails['address']['postal_code']) && !empty(['address']['postal_code'])) {
+        if (empty($billingDetails['address']['postal_code']) && !empty($shippingDetails['address']['postal_code'])) {
             $billingDetails['address']['postal_code'] = $shippingDetails['address']['postal_code'];
         }
 
-        if (empty($billingDetails['address']['city']) && !empty(['address']['city'])) {
+        if (empty($billingDetails['address']['city']) && !empty($shippingDetails['address']['city'])) {
             $billingDetails['address']['city'] = $shippingDetails['address']['city'];
         }
 
-        if (empty($billingDetails['address']['country']) && !empty(['address']['country'])) {
+        if (empty($billingDetails['address']['country']) && !empty($shippingDetails['address']['country'])) {
             $billingDetails['address']['country'] = $shippingDetails['address']['country'];
         }
 
@@ -215,6 +215,8 @@ class ProcessStripeWebhook implements EventHandlerInterface
         if (!empty($shippingDetails['address'])) {
             $shippingAddress = $this->updateAddress($order, $shippingDetails, AddressType::Shipping);
             $order->setShippingAddress($shippingAddress);
+        } else {
+            $order->setShippingAddress($billingAddress);
         }
 
         return Craft::$app->elements->saveElement($order);
