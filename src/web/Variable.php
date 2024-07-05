@@ -85,21 +85,6 @@ class Variable
         // TODO: Add inventory location to settings? How to get the correct inventory location?
         /* @var InventoryLocation $inventory */
 
-        $inventories = $store->getInventoryLocations()->collect();
-        if (!empty($options['inventory'])) {
-            $inventory = $inventories->filter(function($location) use ($options) {
-                return $location->id === (int) $options['inventory'];
-            })->first();
-        } else {
-            $inventory = $inventories->filter(function($location) use ($settings) {
-                return $location->id === (int) $settings->inventoryId;
-            })->first();
-        }
-
-        if ($inventory === null) {
-            throw new Exception('No inventory location found');
-        }
-
         if ($settings->restrictCountries || !empty($options['restrictCountries'])) {
             $allowedCountries = $store->settings->countriesList;
             $allowedCountries = array_keys($allowedCountries);

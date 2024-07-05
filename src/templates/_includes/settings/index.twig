@@ -13,14 +13,6 @@
       instructions: 'Select the gateway through which payments will be processed.',
       errors: settings.getErrors('gatewayId')
     }) }}
-    {{ forms.selectField({
-      name: 'inventoryId',
-      label: 'Inventory',
-      options: inventories,
-      value: settings.inventoryId,
-      instructions: 'Select an inventory.',
-      errors: settings.getErrors('inventoryId')
-    }) }}
     {{ forms.checkboxField({
       label: 'Shipping Address Required',
       instructions: 'Checking this will prompt the user for their shipping address.',

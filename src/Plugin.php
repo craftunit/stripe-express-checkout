@@ -122,24 +122,6 @@ class Plugin extends BasePlugin
             }
         );
 
-        Event::on(
-            InventoryMovement::class,
-            InventoryMovement::EVENT_INIT,
-            static function(Event $event) {
-                /** @var InventoryMovement $movement */
-                $movement = $event->sender;
-
-                $settings = Plugin::getInstance()->settings;
-                $inventoryLocationId = $settings->inventoryId;
-                $inventoryLocation = Commerce::getInstance()?->getInventoryLocations()->getInventoryLocationById($inventoryLocationId);
-
-                if ($inventoryLocation) {
-                    $movement->fromInventoryLocation = $inventoryLocation;
-                    $movement->toInventoryLocation = $inventoryLocation;
-                }
-            }
-        );
-
         // TODO: Use eventhandlers; can't register template roots for some reason when using eventhandlers
         $eventHandlers = [
             ProcessStripeWebhook::class,

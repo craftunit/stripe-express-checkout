@@ -27,7 +27,6 @@ class Settings extends Model
 {
     /* GENERAL SETTINGS */
     public ?string $gatewayId = null;
-    public ?string $inventoryId = null;
     public bool $shippingAddressRequired = false;
     public bool $phoneNumberRequired = false;
     public bool $restrictCountries = false;
