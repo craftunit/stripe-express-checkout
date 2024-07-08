@@ -54,18 +54,20 @@ class Variable
             }
         }
 
-        $commerceShippingMethods = Commerce::getInstance()?->getShippingMethods()->getAllShippingMethods();
-        $shippingRates = [];
-        foreach ($commerceShippingMethods as $shippingMethod) {
-            $shippingRates[] = [
-                'id' => $shippingMethod->handle,
-                'name' => $shippingMethod->name,
-                'displayName' => $shippingMethod->name, // TODO: Add displayName to shipping method (translatable?)
-                'amount' => $shippingMethod->getPriceForOrder($order) * 100,
-            ];
-        }
 
         $settings = StripeExpressCheckout::getInstance()->settings;
+        $shippingRates = [];
+        if ($settings->shippingAddressRequired) {
+            $commerceShippingMethods = Commerce::getInstance()?->getShippingMethods()->getAllShippingMethods();
+            foreach ($commerceShippingMethods as $shippingMethod) {
+                $shippingRates[] = [
+                    'id' => $shippingMethod->handle,
+                    'name' => $shippingMethod->name,
+                    'displayName' => $shippingMethod->name, // TODO: Add displayName to shipping method (translatable?)
+                    'amount' => $shippingMethod->getPriceForOrder($order) * 100,
+                ];
+            }
+        }
 
         if ($settings->shippingAddressRequired && empty($shippingRates)) {
             throw new Exception('No shipping methods found');
@@ -107,6 +109,8 @@ class Variable
         $options = array_merge($defaultOptions, $options);
 
         $amountInCents = (int) ($order->getTotal() * 100);
+
+        // dd($order->getTotal(), $amountInCents) ;
         $options = array_merge([
             'id' => $id,
             'amount' => $amountInCents,
