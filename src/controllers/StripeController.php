@@ -33,10 +33,10 @@ class StripeController extends Controller
 {
     protected array|int|bool $allowAnonymous = self::ALLOW_ANONYMOUS_LIVE;
 
-    public const string EVENT_BEFORE_UPDATE_SHIPPING_RATE = 'beforeUpdateShippingRate';
-    public const string EVENT_AFTER_UPDATE_SHIPPING_RATE = 'afterUpdateShippingRate';
-    public const string EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_BEFORE_SAVE = 'beforeUpdateShippingAddress';
-    public const string EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_AFTER_SAVE = 'afterUpdateShippingAddress';
+    public const EVENT_BEFORE_UPDATE_SHIPPING_RATE = 'beforeUpdateShippingRate';
+    public const EVENT_AFTER_UPDATE_SHIPPING_RATE = 'afterUpdateShippingRate';
+    public const EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_BEFORE_SAVE = 'beforeUpdateShippingAddress';
+    public const EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_AFTER_SAVE = 'afterUpdateShippingAddress';
 
     public function __construct($id,
                                 $module,
