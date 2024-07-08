@@ -44,14 +44,14 @@
       label: 'Success URL',
       value: settings.successUrl,
       required: true,
-      instructions: 'The URL that Stripe redirects to after a successful transaction. The \'successUrl\' gets a query parameter called \'number\' that contains the order number.',
+      instructions: 'The URL that Stripe redirects to after a successful transaction. The \'successUrl\' gets a query parameter called \'number\' that contains the order number. Must begin with a \'/\'.',
       errors: settings.getErrors('successUrl')
     }) }}
     {{ forms.textField({
       name: 'cancelUrl',
       label: 'Cancel URL',
       value: settings.cancelUrl,
-      instructions: 'The URL that Stripe will redirect to after the user abandons the checkout process. By default, this is the URL the user came from.'
+      instructions: 'The URL that Stripe will redirect to after the user abandons the checkout process. By default, this is the URL the user came from. Must begin with a \'/\'.',
     }) }}
   {% endnamespace %}
 </div>
