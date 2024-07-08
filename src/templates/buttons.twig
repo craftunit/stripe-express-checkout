@@ -34,7 +34,7 @@
   class="{{ classes }}"
   data-express-id="{{ id }}"
   {% if name is defined %}data-express-name="{{ name }}"{% endif %}
-">
+>
   <div class="{{ loaderClasses }}">
     {% if options['loaderTemplate'] is defined and options['loaderTemplate'] | length %}
       {% include options['loaderTemplate'] %}
