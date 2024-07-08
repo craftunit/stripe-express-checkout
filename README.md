@@ -2,10 +2,10 @@
 Adding the [Stripe Express Checkout Element](https://docs.stripe.com/elements/express-checkout-element) to Commerce-Stripe.
 
 ## Table of Contents
+- [Features](#features)
 - [Showcase](#showcase)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Features](#features)
 - [Usage](#usage)
   - [1. Products page](#1-products-page)
   - [2. Cart page](#2-cart-page)
@@ -15,6 +15,16 @@ Adding the [Stripe Express Checkout Element](https://docs.stripe.com/elements/ex
     - [Button Options](#button-options)
     - [Event Hooks](#event-hooks)
   - [Adjustments made for Craft Commerce](#adjustments-made-for-craft-commerce)
+
+## Features
+- Adds the Stripe Express Checkout Element to your Craft Commerce site.
+- Checkout products and carts with a single click.
+- Supports Apple Pay, Google Pay, PayPal and much more.
+- Supports shipping address and phone number requirements.
+- Supports all the options from the Stripe Express Checkout Element.
+- Intercept request through event hooks.
+- Automatically adjusts costs based on configured shipping rules.
+- Restrict deliveries to allowed countries in your Commerce settings.
 
 ## Showcase
 **TODO: Add gif/webm of the express checkout; Maybe a YouTube Video showcasing the plugin would be neat**
@@ -46,17 +56,9 @@ composer require craft-unit/craft-stripe-express-checkout
 ./craft plugin/install stripe-express-checkout
 ```
 
-## Features
-- Adds the Stripe Express Checkout Element to your Craft Commerce site.
-- Checkout products and carts with a single click.
-- Supports Apple Pay, Google Pay, PayPal and much more.
-- Supports shipping address and phone number requirements.
-- Supports all the options from the Stripe Express Checkout Element.
-- Intercept request through event hooks.
-- Automatically adjusts costs based on configured shipping rules.
-- Restrict deliveries to allowed countries in your Commerce settings.
-
-## Usage
+## Setup
+### TL;DR
+**TODO: Add a setup guide**
 
 ### Before you start
 Before you can use this plugin, you need to install the Stripe Gateway Plugin and configure it. All orders
