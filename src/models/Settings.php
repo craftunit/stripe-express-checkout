@@ -5,6 +5,7 @@ namespace craftunit\craftstripeexpresscheckout\models;
 use craft\base\Model;
 use craft\commerce\base\GatewayInterface;
 use craft\commerce\Plugin as Commerce;
+use craft\errors\DeprecationException;
 use craftunit\craftstripeexpresscheckout\enums\ApplePayTheme;
 use craftunit\craftstripeexpresscheckout\enums\ApplePayType;
 use craftunit\craftstripeexpresscheckout\enums\GooglePayTheme;
@@ -53,7 +54,7 @@ class Settings extends Model
     protected function defineRules(): array
     {
         return array_merge(parent::defineRules(), [
-            [['gatewayId'], 'required'],
+            [['gatewayId', 'successUrl'], 'required'],
             [['gatewayId', 'successUrl', 'cancelUrl', 'loaderTemplate', 'phoneField'], 'string'],
             [['shippingAddressRequired', 'phoneNumberRequired', 'restrictCountries'], 'boolean'],
             [['maxColumns', 'maxRows'], 'integer', 'min' => 0],
@@ -73,6 +74,7 @@ class Settings extends Model
 
     /**
      * @throws InvalidConfigException
+     * @throws DeprecationException
      */
     public function getGateway(): ?GatewayInterface
     {

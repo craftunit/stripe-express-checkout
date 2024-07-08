@@ -19,6 +19,7 @@ use craftunit\craftstripeexpresscheckout\Plugin as StripeExpressCheckout;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\Response;
 
 /**
@@ -99,7 +100,7 @@ class SettingsController extends Controller
      *
      * @return Response|null
      * @throws BadRequestHttpException
-     * @throws MissingComponentException
+     * @throws MissingComponentException|MethodNotAllowedHttpException
      */
     public function actionSaveSettings(): ?Response
     {
@@ -109,9 +110,11 @@ class SettingsController extends Controller
         $stripExpressCheckout = StripeExpressCheckout::getInstance();
 
         if (!Craft::$app->getPlugins()->savePluginSettings($stripExpressCheckout, $settings)) {
-            Craft::$app->getSession()->setError('Couldn’t save plugin settings.');
+            Craft::$app->getSession()->setError('Could not save plugin settings.');
             return null;
         }
+
+        Craft::$app->getSession()->setSuccess('Plugin settings saved.');
 
         return $this->redirectToPostedUrl();
     }
