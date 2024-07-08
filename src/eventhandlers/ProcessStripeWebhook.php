@@ -175,10 +175,12 @@ class ProcessStripeWebhook implements EventHandlerInterface
      */
     private function updateOrderAddresses(Order $order, array $orderDetails): bool
     {
-        $billingDetails = $orderDetails['billing_details'];
-        $shippingDetails = $orderDetails['shipping'];
+        $settings = StripeExpressCheckout::getInstance()->settings;
 
+        $billingDetails = $orderDetails['billing_details'];
         $billingDetails['title'] = 'Rechnungsadresse';
+
+        $shippingDetails = $orderDetails['shipping'];
         $shippingDetails['title'] = 'Lieferadresse';
 
         if (empty($billingDetails['address']['line1']) && !empty($shippingDetails['address']['line1'])) {
@@ -211,11 +213,10 @@ class ProcessStripeWebhook implements EventHandlerInterface
         }
         $order->setBillingAddress($billingAddress);
 
-
-        if (!empty($shippingDetails['address'])) {
+        if ($settings->shippingAddressRequired && !empty($shippingDetails['address'])) {
             $shippingAddress = $this->updateAddress($order, $shippingDetails, AddressType::Shipping);
             $order->setShippingAddress($shippingAddress);
-        } else {
+        } elseif ($settings->shippingAddressRequired){
             $order->setShippingAddress($billingAddress);
         }
 
