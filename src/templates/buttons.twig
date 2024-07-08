@@ -45,3 +45,8 @@
   <div class="{{ errorClasses }}"></div>
   <div class="{{ elementClasses }}"></div>
 </div>
+
+{% js at endBody %}
+    window.csrfTokenName = "{{ craft.app.config.general.csrfTokenName|e('js') }}";
+    window.csrfTokenValue = "{{ craft.app.request.csrfToken|e('js') }}";
+{% endjs %}
