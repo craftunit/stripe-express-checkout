@@ -60,6 +60,7 @@ composer require craft-unit/craft-stripe-express-checkout
 ### TL;DR
 **TODO: Add a setup guide**
 
+## Usage
 ### Before you start
 Before you can use this plugin, you need to install the Stripe Gateway Plugin and configure it. All orders
 will be processed through the selected gateway. You can find the Stripe Gateway Plugin in the Plugin Store. Then you can

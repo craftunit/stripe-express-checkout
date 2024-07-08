@@ -54,24 +54,22 @@
         )
     }}
     {# TODO: use searchable input for templates #}
-    {{ forms.textField({
+{#    {{ forms.textField({
       name: 'loaderTemplate',
       label: 'Path to Loader Template',
       instructions: 'The path to the loader template.',
       value: settings.loaderTemplate,
       errors: settings.getErrors('loaderTemplate')
-    }) }}
-{#    {{ forms.autosuggest({
+    }) }}#}
+
+    {{ forms.autosuggestField({
       containerId: 'loaderTemplate',
       name: 'loaderTemplate',
       label: 'Path to Loader Template',
       instructions: 'The path to the loader template.',
       value: settings.loaderTemplate,
-      suggestions: [
-        { value: 'foo', label: 'Foo' },
-        { value: 'bar', label: 'Bar' },
-      ]
-    }) }}#}
+      suggestions: craft.cp.getTemplateSuggestions()
+    }) }}
 
   {% endnamespace %}
 </div>
