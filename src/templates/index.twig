@@ -11,6 +11,22 @@
 {% endset %}
 
 {% set settingsHtml %}
+  <div class="readable">
+    <blockquote class="note tip">
+      <p>
+        You can read up on the plugin docs <a href="https://github.com/craftunit/stripe-express-checkout"
+                                              target="_blank" aria-label="Stripe Express Checkout Plugin Documentation">here</a>.
+        <br>
+        If you would like to know more about the Stripe Express Checkout Element, be sure to check out the official
+        <a href="https://docs.stripe.com/elements/express-checkout-element?locale=de-DE" target="_blank">
+          Stripe Express Checkout Element Documentation
+        </a>
+        and the <a href="https://docs.stripe.com/js/element/express_checkout_element" target="_blank">API docs</a>.
+      </p>
+    </blockquote>
+  </div>
+  <hr>
+
   <input type="hidden" name="action" value="stripe-express-checkout/settings/save-settings">
   {% include 'stripe-express-checkout/_includes/settings/' %}
   {% include 'stripe-express-checkout/_includes/settings/general' %}
