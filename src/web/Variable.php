@@ -84,8 +84,6 @@ class Variable
 
         // TODO: Multi Store support
         $store = Commerce::getInstance()?->getStores()->getCurrentStore();
-        // TODO: Add inventory location to settings? How to get the correct inventory location?
-        /* @var InventoryLocation $inventory */
 
         if ($settings->restrictCountries || !empty($options['restrictCountries'])) {
             $allowedCountries = $store->settings->countriesList;
