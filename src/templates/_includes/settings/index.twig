@@ -2,71 +2,66 @@
 
 {% macro stripeDocLink(href, title) %}
   {% set baseUrl = 'https://docs.stripe.com/' %}
-  See <a href="{{ baseUrl }}{{ href }}" target="_blank">Stripe docs (<code>{{ title ?? 'KEIN TITLE' }}</code>)</a> for more information.
+  See <a href="{{ baseUrl }}{{ href }}" target="_blank">Stripe docs
+  (<code>{{ title ?? 'KEIN TITLE' }}</code>)</a> for more information.
 {% endmacro %}
 
 <div id="settings">
   <h1>Settings</h1>
   {% namespace 'settings' %}
-    {% if gateways | length < 2 %}
-      {{ forms.errorList({
-        errors: 'You do not seem to have any gateways using Stripe. Please create one before using this Plugin.'
-      }) }}
-    {% else %}
-      {{ forms.selectField({
-        first: true,
-        name: 'gatewayId',
-        label: 'Gateway',
-        options: gateways,
-        value: settings.gatewayId,
-        required: true,
-        instructions: 'Select the gateway through which payments will be processed.',
-        errors: settings.getErrors('gatewayId')
-      }) }}
-      {{ forms.checkboxField({
-        label: 'Shipping Address Required',
-        instructions: 'Checking this will prompt the user for their shipping address.',
-        name: 'shippingAddressRequired',
-        checked: settings.shippingAddressRequired,
-        tip: _self.stripeDocLink('js/element/events/on_click?type=expressCheckoutElement#element_on_click-handler-resolve-shippingAddressRequired', 'shippingAddressRequired')
-      }) }}
-      {{ forms.checkboxField({
-        label: 'Phone Number Required',
-        instructions: 'Checking this box will prompt the user for their phone number.',
-        name: 'phoneNumberRequired',
-        checked: settings.phoneNumberRequired,
-        tip: _self.stripeDocLink('js/element/events/on_click?type=expressCheckoutElement#element_on_click-handler-resolve-phoneNumberRequired', 'phoneNumberRequired')
-      }) }}
-      {{ forms.selectField({
-        name: 'phoneField',
-        instructions: 'Map the phone number to plain text on the order field layout. This will only take effect if you enable \'Phone Number Required\'.',
-        label: 'Phone Field',
-        options: fields,
-        value: settings.phoneField,
-        required: false,
-      }) }}
-      {{ forms.checkboxField({
-        label: 'Restrict countries',
-        name: 'restrictCountries',
-        checked: settings.restrictCountries,
-        instructions: 'Checking this will restrict the Stripe \'allowedCountries\' to your country list in Commerce -> Store Settings -> Store -> Country List.',
-        tip: _self.stripeDocLink('js/element/events/on_click?type=expressCheckoutElement#element_on_click-handler-resolve-allowedShippingCountries', 'allowedShippingCountries')
-      }) }}
-      {{ forms.textField({
-        name: 'successUrl',
-        label: 'Success URL',
-        value: settings.successUrl,
-        required: true,
-        instructions: 'The URL that Stripe redirects to after a successful transaction. The \'successUrl\' gets a query parameter called \'number\' that contains the order number. Must begin with a \'/\'.',
-        errors: settings.getErrors('successUrl'),
-        tip: _self.stripeDocLink('js/payment_intents/confirm_payment#confirm_payment_intent-options-confirmParams-return_url', 'return_url')
-      }) }}
-      {{ forms.textField({
-        name: 'cancelUrl',
-        label: 'Cancel URL',
-        value: settings.cancelUrl,
-        instructions: 'The URL that Stripe will redirect to after the user abandons the checkout process. By default, this is the URL the user came from. Must begin with a \'/\'.',
-      }) }}
-    {% endif %}
+    {{ forms.selectField({
+      first: true,
+      name: 'gatewayId',
+      label: 'Gateway',
+      options: gateways,
+      value: settings.gatewayId,
+      required: true,
+      instructions: 'Select the gateway through which payments will be processed.',
+      errors: settings.getErrors('gatewayId')
+    }) }}
+    {{ forms.checkboxField({
+      label: 'Shipping Address Required',
+      instructions: 'Checking this will prompt the user for their shipping address.',
+      name: 'shippingAddressRequired',
+      checked: settings.shippingAddressRequired,
+      tip: _self.stripeDocLink('js/element/events/on_click?type=expressCheckoutElement#element_on_click-handler-resolve-shippingAddressRequired', 'shippingAddressRequired')
+    }) }}
+    {{ forms.checkboxField({
+      label: 'Phone Number Required',
+      instructions: 'Checking this box will prompt the user for their phone number.',
+      name: 'phoneNumberRequired',
+      checked: settings.phoneNumberRequired,
+      tip: _self.stripeDocLink('js/element/events/on_click?type=expressCheckoutElement#element_on_click-handler-resolve-phoneNumberRequired', 'phoneNumberRequired')
+    }) }}
+    {{ forms.selectField({
+      name: 'phoneField',
+      instructions: 'Map the phone number to plain text on the order field layout. This will only take effect if you enable \'Phone Number Required\'.',
+      label: 'Phone Field',
+      options: fields,
+      value: settings.phoneField,
+      required: false,
+    }) }}
+    {{ forms.checkboxField({
+      label: 'Restrict countries',
+      name: 'restrictCountries',
+      checked: settings.restrictCountries,
+      instructions: 'Checking this will restrict the Stripe \'allowedCountries\' to your country list in Commerce -> Store Settings -> Store -> Country List.',
+      tip: _self.stripeDocLink('js/element/events/on_click?type=expressCheckoutElement#element_on_click-handler-resolve-allowedShippingCountries', 'allowedShippingCountries')
+    }) }}
+    {{ forms.textField({
+      name: 'successUrl',
+      label: 'Success URL',
+      value: settings.successUrl,
+      required: true,
+      instructions: 'The URL that Stripe redirects to after a successful transaction. The \'successUrl\' gets a query parameter called \'number\' that contains the order number. Must begin with a \'/\'.',
+      errors: settings.getErrors('successUrl'),
+      tip: _self.stripeDocLink('js/payment_intents/confirm_payment#confirm_payment_intent-options-confirmParams-return_url', 'return_url')
+    }) }}
+    {{ forms.textField({
+      name: 'cancelUrl',
+      label: 'Cancel URL',
+      value: settings.cancelUrl,
+      instructions: 'The URL that Stripe will redirect to after the user abandons the checkout process. By default, this is the URL the user came from. Must begin with a \'/\'.',
+    }) }}
   {% endnamespace %}
 </div>

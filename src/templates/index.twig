@@ -2,37 +2,57 @@
 
 {% import "_includes/forms" as forms %}
 
-{% set fullPageForm = true %}
-{% set title = "Stripe Express Checkout Settings" %}
-{% set tabs = {
-  settings: {
-    label: 'Settings'|t('plugin-handle'),
-    url: '#settings',
-  },
-  generalAppearance: {
-    label: 'General Appearance'|t('plugin-handle'),
-    url: '#general',
-  },
-  applePay: {
-    label: 'Apple Pay'|t('plugin-handle'),
-    url: '#apple-pay',
-  },
-  googlePay: {
-    label: 'Google Pay'|t('plugin-handle'),
-    url: '#google-pay',
-  },
-  payPal: {
-    label: 'PayPal'|t('plugin-handle'),
-    url: '#pay-pal',
-  },
-} %}
-{% set selectedTab = 'settings' %}
+{% set errorHtml %}
+  <div class="readable">
+    <blockquote class="note warning">
+      <p>You do not seem to have any gateways using Stripe. Please create one before using this Plugin.</p>
+    </blockquote>
+  </div>
+{% endset %}
 
-{% block content %}
+{% set settingsHtml %}
   <input type="hidden" name="action" value="stripe-express-checkout/settings/save-settings">
   {% include 'stripe-express-checkout/_includes/settings/' %}
   {% include 'stripe-express-checkout/_includes/settings/general' %}
   {% include 'stripe-express-checkout/_includes/settings/google-pay' %}
   {% include 'stripe-express-checkout/_includes/settings/apple-pay' %}
   {% include 'stripe-express-checkout/_includes/settings/pay-pal' %}
+{% endset %}
+
+{% set title = "Stripe Express Checkout Settings" %}
+{% set html %}
+  {% if gateways | length == 1 %}
+    {{ errorHtml }}
+  {% else %}
+    {% set fullPageForm = true %}
+    {% set tabs = {
+      settings: {
+        label: 'Settings'|t('plugin-handle'),
+        url: '#settings',
+      },
+      generalAppearance: {
+        label: 'General Appearance'|t('plugin-handle'),
+        url: '#general',
+      },
+      applePay: {
+        label: 'Apple Pay'|t('plugin-handle'),
+        url: '#apple-pay',
+      },
+      googlePay: {
+        label: 'Google Pay'|t('plugin-handle'),
+        url: '#google-pay',
+      },
+      payPal: {
+        label: 'PayPal'|t('plugin-handle'),
+        url: '#pay-pal',
+      },
+    } %}
+    {{ settingsHtml }}
+  {% endif %}
+{% endset %}
+
+
+{% set selectedTab = 'settings' %}
+{% block content %}
+  {{ html }}
 {% endblock %}

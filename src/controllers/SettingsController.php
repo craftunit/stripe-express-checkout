@@ -56,6 +56,7 @@ class SettingsController extends Controller
 
             $gateways[$gateway->id] = $gateway->name;
         }
+        // TODO: if gateways is empty, return a message
 
         $fieldLayout = Craft::$app->getFields()->getLayoutByType(Order::class);
         $orderFields = $fieldLayout->getCustomFields();
