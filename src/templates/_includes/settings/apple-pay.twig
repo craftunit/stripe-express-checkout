@@ -1,5 +1,11 @@
 {% import '_includes/forms' as forms %}
 
+{% macro stripeDocLink(href, title) %}
+  {% set baseUrl = 'https://docs.stripe.com/' %}
+  See <a href="{{ baseUrl }}{{ href }}" target="_blank">Stripe docs
+  (<code>{{ title ?? 'KEIN TITLE' }}</code>)</a> for more information.
+{% endmacro %}
+
 <div id="apple-pay" class="hidden">
   {% namespace 'settings' %}
     {{ forms.selectField({
@@ -7,21 +13,24 @@
       label: 'Theme',
       options: applePay.themes,
       value: settings.applePayTheme,
-      instructions: 'The theme of the Apple Pay button.'
+      instructions: 'The theme of the Apple Pay button.',
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-buttonTheme-applePay', 'buttonTheme.applePay')
     }) }}
     {{ forms.selectField({
       name: 'applePayType',
       label: 'Type',
       options: applePay.types,
       value: settings.applePayType,
-      instructions: 'The type of the Apple Pay button.'
+      instructions: 'The type of the Apple Pay button.',
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-buttonType-applePay', 'buttonType.applePay')
     }) }}
     {{ forms.selectField({
       name: 'showApplePay',
       label: 'Show Button',
       options: applePay.showWallet,
       value: settings.showApplePay,
-      instructions: 'Show the Apple Pay button.'
+      instructions: 'Show the Apple Pay button.',
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-paymentMethods-applePay', 'paymentMethods.applePay')
     }) }}
   {% endnamespace %}
 </div>

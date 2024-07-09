@@ -16,6 +16,7 @@ use craftunit\craftstripeexpresscheckout\enums\PaypalTheme;
 use craftunit\craftstripeexpresscheckout\enums\PaypalType;
 use craftunit\craftstripeexpresscheckout\enums\ShowWallet;
 use craftunit\craftstripeexpresscheckout\Plugin as StripeExpressCheckout;
+use Imagine\Filter\Basic\Show;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
@@ -64,6 +65,9 @@ class SettingsController extends Controller
             $fields[$field->uid] = $field->name;
         }
 
+        // TODO: Use a more clean approach (different ShowWalletOptions for every paymentMethod?);
+        $showPayPalOptions = array_filter(ShowWallet::asOptions(), static fn($option) => $option !== ShowWallet::Always->name);
+
         return $this->renderTemplate('stripe-express-checkout', [
             'settings' => StripeExpressCheckout::getInstance()->settings,
             'gateways' => $gateways,
@@ -81,6 +85,7 @@ class SettingsController extends Controller
             'paypal' => [
                 'themes' => PaypalTheme::asOptions(),
                 'types' => PaypalType::asOptions(),
+                'showWallet' => $showPayPalOptions,
             ],
             'overflow' => Overflow::asOptions(),
         ]);

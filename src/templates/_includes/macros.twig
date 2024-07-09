@@ -1,0 +1,4 @@
+{% macro stripeDocLink(href) %}
+    {% set baseUrl = 'https://docs.stripe.com/' %}
+    See <a href="{{ baseUrl }}{{ href }}" target="_blank">Stripe docs</a> for more information.
+{% endmacro %}

@@ -1,5 +1,10 @@
 {% import '_includes/forms' as forms %}
 
+{% macro stripeDocLink(href, title) %}
+  {% set baseUrl = 'https://docs.stripe.com/' %}
+  See <a href="{{ baseUrl }}{{ href }}" target="_blank">Stripe docs (<code>{{ title ?? 'KEIN TITLE' }}</code>)</a> for more information.
+{% endmacro %}
+
 <div id="general" class="hidden">
   {% namespace 'settings' %}
     {{ forms.selectField({
@@ -8,68 +13,55 @@
       options: overflow,
       value: settings.overflow,
       instructions: 'Choose how the overflow should be handled.',
-      errors: settings.getErrors('overflow')
+      errors: settings.getErrors('overflow'),
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-layout-overflow', 'overflow')
     }) }}
     {# TODO: Styling? Min nums and stuff? #}
-
-    {{
-      forms.field({
-          label: 'Button Height',
-          instructions: 'The height of the buttons in pixels.',
-          errors: settings.getErrors('buttonHeight'),
-        },
-        input('number', 'buttonHeight', settings.buttonHeight)
-          | attr({
-            class: "text",
-            min: 40,
-            max: 55
-          })
-      )
-    }}
-
-    {{
-      forms.field({
-          label: 'Max Columns',
-          instructions: 'The maximum number of columns.',
-          errors: settings.getErrors('maxColumns'),
-        },
-        input('number', 'maxColumns', settings.maxColumns)
-          | attr({
-            class: "text",
-            min: 0,
-          })
-      )
-    }}
-    {{
-      forms.field({
-          label: 'Max Rows',
-          instructions: 'The maximum number of rows.',
-          errors: settings.getErrors('maxRows'),
-        },
-        input('number', 'maxRows', settings.maxRows)
-        | attr({
-          class: "text",
-          min: 0,
-          })
-        )
-    }}
-    {# TODO: use searchable input for templates #}
-{#    {{ forms.textField({
-      name: 'loaderTemplate',
-      label: 'Path to Loader Template',
-      instructions: 'The path to the loader template.',
-      value: settings.loaderTemplate,
-      errors: settings.getErrors('loaderTemplate')
-    }) }}#}
-
+    {{ forms.field({
+      label: 'Button Height',
+      instructions: 'The height of the buttons in pixels.',
+      errors: settings.getErrors('buttonHeight'),
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-buttonHeight', 'buttonHeight')
+    },
+      input('number', 'buttonHeight', settings.buttonHeight)
+      | attr({
+        class: "text",
+        min: 40,
+        max: 55
+      })
+    ) }}
+    {{ forms.field({
+      label: 'Max Columns',
+      instructions: 'The maximum number of columns.',
+      errors: settings.getErrors('maxColumns'),
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-layout-maxColumns', 'layout.maxColumns')
+    },
+      input('number', 'maxColumns', settings.maxColumns)
+      | attr({
+        class: "text",
+        min: 0,
+      })
+    ) }}
+    {{ forms.field({
+      label: 'Max Rows',
+      instructions: 'The maximum number of rows.',
+      errors: settings.getErrors('maxRows'),
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-layout-maxRows', 'layout.maxRows')
+    },
+      input('number', 'maxRows', settings.maxRows)
+      | attr({
+        class: "text",
+        min: 0,
+      })
+    ) }}
     {{ forms.autosuggestField({
       containerId: 'loaderTemplate',
       name: 'loaderTemplate',
       label: 'Path to Loader Template',
       instructions: 'The path to the loader template.',
       value: settings.loaderTemplate,
-      suggestions: craft.cp.getTemplateSuggestions()
+      suggestions: craft.cp.getTemplateSuggestions(),
+      tip: 'The text "Loading Stripe..." is displayed by default. You can customize this by creating a custom template and entering the path here.'
     }) }}
-
   {% endnamespace %}
 </div>

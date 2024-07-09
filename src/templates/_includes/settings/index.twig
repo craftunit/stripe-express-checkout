@@ -1,5 +1,10 @@
 {% import '_includes/forms' as forms %}
 
+{% macro stripeDocLink(href, title) %}
+  {% set baseUrl = 'https://docs.stripe.com/' %}
+  See <a href="{{ baseUrl }}{{ href }}" target="_blank">Stripe docs (<code>{{ title ?? 'KEIN TITLE' }}</code>)</a> for more information.
+{% endmacro %}
+
 <div id="settings">
   <h1>Settings</h1>
   {% namespace 'settings' %}
@@ -22,13 +27,15 @@
         label: 'Shipping Address Required',
         instructions: 'Checking this will prompt the user for their shipping address.',
         name: 'shippingAddressRequired',
-        checked: settings.shippingAddressRequired,
+        hecked: settings.shippingAddressRequired,
+        tip: _self.stripeDocLink('js/element/events/on_click?type=expressCheckoutElement#element_on_click-handler-resolve-shippingAddressRequired', 'shippingAddressRequired')
       }) }}
       {{ forms.checkboxField({
         label: 'Phone Number Required',
         instructions: 'Checking this box will prompt the user for their phone number.',
         name: 'phoneNumberRequired',
         checked: settings.phoneNumberRequired,
+        tip: _self.stripeDocLink('js/element/events/on_click?type=expressCheckoutElement#element_on_click-handler-resolve-phoneNumberRequired', 'phoneNumberRequired')
       }) }}
       {{ forms.selectField({
         name: 'phoneField',
@@ -42,7 +49,8 @@
         label: 'Restrict countries',
         name: 'restrictCountries',
         checked: settings.restrictCountries,
-        instructions: 'Checking this will restrict the Stripe \'allowedCountries\' to your country list in Commerce -> Store Settings -> Store -> Country List.'
+        instructions: 'Checking this will restrict the Stripe \'allowedCountries\' to your country list in Commerce -> Store Settings -> Store -> Country List.',
+        tip: _self.stripeDocLink('js/element/events/on_click?type=expressCheckoutElement#element_on_click-handler-resolve-allowedShippingCountries', 'allowedShippingCountries')
       }) }}
       {{ forms.textField({
         name: 'successUrl',
@@ -50,7 +58,8 @@
         value: settings.successUrl,
         required: true,
         instructions: 'The URL that Stripe redirects to after a successful transaction. The \'successUrl\' gets a query parameter called \'number\' that contains the order number. Must begin with a \'/\'.',
-        errors: settings.getErrors('successUrl')
+        errors: settings.getErrors('successUrl'),
+        tip: _self.stripeDocLink('js/payment_intents/confirm_payment#confirm_payment_intent-options-confirmParams-return_url', 'return_url')
       }) }}
       {{ forms.textField({
         name: 'cancelUrl',

@@ -1,5 +1,11 @@
 {% import '_includes/forms' as forms %}
 
+{% macro stripeDocLink(href, title) %}
+  {% set baseUrl = 'https://docs.stripe.com/' %}
+  See <a href="{{ baseUrl }}{{ href }}" target="_blank">Stripe docs
+  (<code>{{ title ?? 'KEIN TITLE' }}</code>)</a> for more information.
+{% endmacro %}
+
 <div id="pay-pal" class="hidden">
   {% namespace 'settings' %}
     {{ forms.selectField({
@@ -7,14 +13,24 @@
       label: 'Theme',
       options: paypal.themes,
       value: settings.paypalTheme,
-      instructions: 'The theme of the PayPal button.'
+      instructions: 'The theme of the PayPal button.',
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-buttonTheme-paypal', 'buttonTheme.paypal')
     }) }}
     {{ forms.selectField({
       name: 'paypalType',
       label: 'Type',
       options: paypal.types,
       value: settings.paypalType,
-      instructions: 'The type of the PayPal button.'
+      instructions: 'The type of the PayPal button.',
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-buttonType-paypal', 'buttonType.paypal')
+    }) }}
+    {{ forms.selectField({
+      name: 'showGooglePay',
+      label: 'Show Button',
+      options: paypal.showWallet,
+      value: settings.showPayPal,
+      instructions: 'Show the GooglePay button.',
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-paymentMethods-paypal', 'paymentMethods.paypal')
     }) }}
   {% endnamespace %}
 </div>

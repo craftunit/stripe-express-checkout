@@ -1,5 +1,11 @@
 {% import '_includes/forms' as forms %}
 
+{% macro stripeDocLink(href, title) %}
+  {% set baseUrl = 'https://docs.stripe.com/' %}
+  See <a href="{{ baseUrl }}{{ href }}" target="_blank">Stripe docs
+  (<code>{{ title ?? 'KEIN TITLE' }}</code>)</a> for more information.
+{% endmacro %}
+
 <div id="google-pay" class="hidden">
   {% namespace 'settings' %}
     {{ forms.selectField({
@@ -7,21 +13,24 @@
       label: 'Theme',
       options: googlePay.themes,
       value: settings.googlePayTheme,
-      instructions: 'The theme of the GooglePay button.'
+      instructions: 'The theme of the GooglePay button.',
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-buttonTheme-googlePay', 'buttonTheme.googlePay')
     }) }}
     {{ forms.selectField({
       name: 'googlePayType',
       label: 'Type',
       options: googlePay.types,
       value: settings.googlePayType,
-      instructions: 'The type of the GooglePay button.'
+      instructions: 'The type of the GooglePay button.',
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-buttonType-googlePay', 'buttonType.googlePay')
     }) }}
     {{ forms.selectField({
       name: 'showGooglePay',
       label: 'Show Button',
       options: googlePay.showWallet,
       value: settings.showGooglePay,
-      instructions: 'Show the GooglePay button.'
+      instructions: 'Show the GooglePay button.',
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-paymentMethods-googlePay', 'paymentMethods.googlePay')
     }) }}
   {% endnamespace %}
 </div>
