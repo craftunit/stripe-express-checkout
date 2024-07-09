@@ -58,6 +58,8 @@ class Settings extends Model
             [['gatewayId', 'successUrl'], 'required'],
             [['gatewayId', 'successUrl', 'cancelUrl', 'loaderTemplate', 'phoneField'], 'string'],
             [['shippingAddressRequired', 'phoneNumberRequired', 'restrictCountries'], 'boolean'],
+            // if phoneNumberRequired is true, phoneField is required
+            [['phoneField'], 'required', 'when' => fn() => $this->phoneNumberRequired],
             [['maxColumns', 'maxRows'], 'integer', 'min' => 0],
             [['buttonHeight'], 'integer', 'min' => 40, 'max' => 55],
             [['overflow'], 'in', 'range' => Overflow::asValues()],

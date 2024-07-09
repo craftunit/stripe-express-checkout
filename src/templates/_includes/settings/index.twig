@@ -39,6 +39,7 @@
       label: 'Phone Field',
       options: fields,
       value: settings.phoneField,
+      errors: settings.getErrors('phoneField'),
       required: false,
     }) }}
     {{ forms.checkboxField({
