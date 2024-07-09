@@ -96,7 +96,6 @@ You can find all the options in the [Stripe documentation](https://docs.stripe.c
 | Setting Name | Description |
 | --- | --- |
 | gatewayId | Select the gateway through which payments will be processed. |
-| inventoryId | Select an inventory. |
 | shippingAddressRequired | Checking this will prompt the user for their shipping address. |
 | phoneNumberRequired | Checking this box will prompt the user for their phone number. |
 | restrictCountries | Checking this will restrict the Stripe 'allowedCountries' to your country list in Commerce -> Store Settings -> Store -> Country List. |
