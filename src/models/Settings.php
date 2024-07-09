@@ -36,7 +36,7 @@ class Settings extends Model
     public ?string $loaderTemplate = null;
 
     /* APPEARANCE */
-    public int $buttonHeight = 40;
+    public int $buttonHeight = 44;
     public string $applePayTheme = ApplePayTheme::Black->value;
     public string $googlePayTheme = GooglePayTheme::Black->value;
     public string $paypalTheme = PaypalTheme::Blue->value;
