@@ -235,7 +235,7 @@ class StripeExpressCheckout {
       clientSecret,
       confirmParams: {
         // TODO: Make dynamic and add cancel_url
-        return_url: `https://${window.location.hostname}/${this.options.successUrl}?number=${number}`,
+        return_url: `https://${window.location.hostname}${this.options.successUrl}?number=${number}`,
       },
     });
 
