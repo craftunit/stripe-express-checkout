@@ -4,11 +4,9 @@ namespace craftunit\craftstripeexpresscheckout\web;
 
 use Craft;
 use craft\commerce\elements\Order;
-use craft\commerce\models\InventoryLocation;
 use craft\commerce\models\LineItem;
 use craft\commerce\Plugin as Commerce;
 use craft\helpers\App;
-use craftunit\craftstripeexpresscheckout\Plugin;
 use craftunit\craftstripeexpresscheckout\Plugin as StripeExpressCheckout;
 use craftunit\craftstripeexpresscheckout\web\assets\expresscheckout\ExpressCheckoutAsset;
 use Throwable;

@@ -64,18 +64,9 @@ class SettingsController extends Controller
             $fields[$field->uid] = $field->name;
         }
 
-        $inventories = [
-            null => 'Please select an inventory location',
-        ];
-        $inventoryOptions = Commerce::getInstance()?->getStores()->getCurrentStore()->getInventoryLocationsOptions();
-        foreach ($inventoryOptions as $key => $value) {
-            $inventories[$key] = $value;
-        }
-
         return $this->renderTemplate('stripe-express-checkout', [
             'settings' => StripeExpressCheckout::getInstance()->settings,
             'gateways' => $gateways,
-            'inventories' => $inventories,
             'fields' => $fields,
             'applePay' => [
                 'themes' => ApplePayTheme::asOptions(),
