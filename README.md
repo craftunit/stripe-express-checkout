@@ -32,7 +32,7 @@ Adding the [Stripe Express Checkout Element](https://docs.stripe.com/elements/ex
 ## Requirements
 - <a href="https://stripe.com" target="_blank">Stripe Account</a>
 - <a href="https://github.com/craftcms/cms" target="_blank">Craft CMS ^4.7.0</a>
-- PHP >=8.0.2
+- PHP >= 8.2
 - <a href="https://github.com/craftmcs/commerce" target="_blank">Craft Commerce ^4.0.0</a>
 - <a href="https://github.com/craftcms/commerce-stripe" target="_blank">Craft Commerce Stripe ^4.0.0</a>
 
@@ -57,90 +57,41 @@ composer require craft-unit/craft-stripe-express-checkout
 ```
 
 ## Setup
-### TL;DR
-**TODO: Add a setup guide**
-
-## Usage
-### Before you start
-Before you can use this plugin, you need to install the Stripe Gateway Plugin and configure it. All orders
-will be processed through the selected gateway. You can find the Stripe Gateway Plugin in the Plugin Store. Then you can
-configure set the Gateway in the plugin settings.
-
-#### Global Settings
-You can configure all settings in the plugin settings page.
-![Stripe Express Checkout Settings Page](https://i.imgur.com/UooyyGh.png)
-
-#### Local settings
-You can also pass settings directly to the `craft.expressCheckout.buttons` function. This will override the global settings.
-```twig
-{# EXAMPLE SETTINGS #}
-{% set settings  = {
-    name: product.slug ~ '-express-checkout',
-
-    shippingAddressRequired: true,
-    phoneNumberRequired: false,
-
-    paymentMethodOrder: ['paypal', 'googlePay', 'link'],
-    buttonTheme: {
-      paypal: 'blue',
-    },
-
-    buttonHeight: 55,
-    buttonType: {
-      paypal: 'pay',
-      googlePay: 'order',
-    },
-    wallets: {
-      applePay: 'always',
-      googlePay: 'always',
-    }
-    {# and more... #}
-} %}
-```
-
-### Rendering the buttons
-You render the buttons by using the `craft.expressCheckout.buttons` function. You then pass an array of options to the
-function. All options you pass the button will be passed through to the Stripe API. You can find all the options in the
-[Stripe documentation](https://docs.stripe.com/js/element/express_checkout_element). Every option you see there can be used.
+1. Install [Craft Commerce](https://github.com/craftcms/commerce)  and the [Stripe Gateway Plugin](https://github.com/craftcms/commerce-stripe).
+2. Create a [Stripe Account](https://stripe.com) or use an existing one.
+3. Create a new Gateway under Commerce -> System Settings -> Gateways. See [Stripe Gateway Documentation](https://github.com/craftcms/commerce-stripe?tab=readme-ov-file#setup).
+   - Set the Gateway Type to Stripe.
+   - Set the Publishable Key and Secret Key.
+   - After saving the gateway, you get a webhook endpoint. You will need to create a new webhook in your Stripe account. This can be a local endpoint or a live endpoint. Follow the instructions in your Stripe account.
+4. Go to the plugin settings in the sidebar and select the gateway you just created.
+5. Render the buttons on your products and cart page.
+6. Be sure to handle the order complete event. You can use the `fetch` API to ask for the order and return it to the success page.
 
 ### Products page
-![Product Page](https://i.imgur.com/Wxafzai.png)
 **`products/_product.twig`**
-```twig
+```twig 
 {{ craft.expressCheckout.buttons({
     items: [{
       id: product.defaultVariant.id,
       qty: 1,
-    }]
+    }],
 }) | raw }}
 ```
-We pass an array of `items` to the `craft.expressCheckout.buttons` function.
+![Product Page](https://i.imgur.com/Wxafzai.png)
 
 ### Cart page
-![Cart Page](https://i.imgur.com/X8wQrOm.png)
-**`cart/cart.twig`**
+**`cart.twig`**
 ```twig
 {{ craft.expressCheckout.buttons({ 
   cart: craft.commerce.carts.cart,
   cancelUrl: '/cart',
  }) | raw }}
 ```
-In this example we pass our cart object directly to the `craft.expressCheckout.buttons` function. This is useful for using
-express checkout on the cart page.
+![Cart Page](https://i.imgur.com/X8wQrOm.png)
 
-## Order complete (TODO: Redirect nur nach Success und webhook von stripe?)
-After the order is completed, the user will be redirected to the `success_url` you set in the options. At this point in time
-your order might not be completed in Craft Commerce hence why you won't see the completed order. You can use  `fetch` to 
-ask for the order and return it to the success page.
-
-## Configuration
-### Stripe Gateway
-After installing the plugin, go to the plugin settings page and select your configured Stripe gateway. This plugin will
-then pass everything to the selected gateway.
-
-### Plugin Settings
-You can configure all settings in the plugin settings page. All settings can be overridden by passing them to the
-`craft.expressCheckout.buttons` function.
+## Usage
+Configuration can be done globally in the plugin settings or locally by passing settings to the `craft.expressCheckout.buttons` function. Passing the settings to the function will override the global settings.
+You can find all the options in the [Stripe documentation](https://docs.stripe.com/js/element/express_checkout_element).
 
 | Setting Name | Description |
 | --- | --- |
@@ -166,6 +117,74 @@ You can configure all settings in the plugin settings page. All settings can be 
 | showApplePay | Show the Apple Pay button. |
 | showGooglePay | Show the GooglePay button. |
 | phoneField | Map the phone number to plain text on the order field layout. This will only take effect if you enable 'Phone Number Required'. |
+
+### Global Settings
+![Stripe Express Checkout Settings Page](https://i.imgur.com/UooyyGh.png)
+
+### Local settings
+```twig
+{% set settings  = {
+    name: product.slug ~ '-express-checkout',
+    shippingAddressRequired: true,
+    phoneNumberRequired: false,
+    paymentMethodOrder: ['paypal', 'googlePay', 'link'],
+    buttonTheme: {
+      paypal: 'blue',
+    },
+    buttonHeight: 55,
+    buttonType: {
+      paypal: 'pay',
+      googlePay: 'order',
+    },
+    wallets: {
+      applePay: 'always',
+      googlePay: 'always',
+    }
+    {# and more... #}
+} %}
+```
+
+### Rendering the buttons
+You render the buttons by using the `craft.expressCheckout.buttons` function. You then pass an array of options to the
+function. All options you pass the button will be passed through to the Stripe API. You can find all the options in the
+[Stripe documentation](https://docs.stripe.com/js/element/express_checkout_element). Every option you see there can be used.
+
+### Products page
+**`products/_product.twig`**
+```twig
+{{ craft.expressCheckout.buttons({
+    items: [{
+      id: product.defaultVariant.id,
+      qty: 1,
+    }]
+}) | raw }}
+```
+We pass an array of `items` to the `craft.expressCheckout.buttons` function.
+
+### Cart page
+**`cart/cart.twig`**
+```twig
+{{ craft.expressCheckout.buttons({ 
+  cart: craft.commerce.carts.cart,
+  cancelUrl: '/cart',
+ }) | raw }}
+```
+In this example we pass our cart object directly to the `craft.expressCheckout.buttons` function. This is useful for using
+express checkout on the cart page.
+
+## Order complete (TODO: Redirect nur nach Success und webhook von stripe?)
+After the order is completed, the user will be redirected to the `success_url` you set in the options. At this point in time
+your order might not be completed in Craft Commerce hence why you won't see the completed order. You can use  `fetch` to 
+ask for the order and return it to the success page.
+
+## Configuration
+### Stripe Gateway
+After installing the plugin, go to the plugin settings page and select your configured Stripe gateway. This plugin will
+then pass everything to the selected gateway.
+
+### Plugin Settings
+You can configure all settings in the plugin settings page. All settings can be overridden by passing them to the
+`craft.expressCheckout.buttons` function.
 
 ### Event Hooks
 | Klasse | Event |
