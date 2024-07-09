@@ -47,7 +47,8 @@
       name: 'restrictCountries',
       checked: settings.restrictCountries,
       instructions: 'Checking this will restrict the Stripe \'allowedCountries\' to your country list in Commerce -> Store Settings -> Store -> Country List.',
-      tip: _self.stripeDocLink('js/element/events/on_click?type=expressCheckoutElement#element_on_click-handler-resolve-allowedShippingCountries', 'allowedShippingCountries')
+      tip: _self.stripeDocLink('js/element/events/on_click?type=expressCheckoutElement#element_on_click-handler-resolve-allowedShippingCountries', 'allowedShippingCountries'),
+      errors: settings.getErrors('restrictCountries')
     }) }}
     {{ forms.textField({
       name: 'successUrl',

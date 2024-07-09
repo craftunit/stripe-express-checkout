@@ -6,6 +6,7 @@ use craft\base\Model;
 use craft\commerce\base\GatewayInterface;
 use craft\commerce\Plugin as Commerce;
 use craft\errors\DeprecationException;
+use craft\errors\SiteNotFoundException;
 use craftunit\craftstripeexpresscheckout\enums\ApplePayTheme;
 use craftunit\craftstripeexpresscheckout\enums\ApplePayType;
 use craftunit\craftstripeexpresscheckout\enums\GooglePayTheme;
@@ -58,7 +59,6 @@ class Settings extends Model
             [['gatewayId', 'successUrl'], 'required'],
             [['gatewayId', 'successUrl', 'cancelUrl', 'loaderTemplate', 'phoneField'], 'string'],
             [['shippingAddressRequired', 'phoneNumberRequired', 'restrictCountries'], 'boolean'],
-            // if phoneNumberRequired is true, phoneField is required
             [['phoneField'], 'required', 'when' => fn() => $this->phoneNumberRequired],
             [['maxColumns', 'maxRows'], 'integer', 'min' => 0],
             [['buttonHeight'], 'integer', 'min' => 40, 'max' => 55],
@@ -71,7 +71,7 @@ class Settings extends Model
             [['paypalType'], 'in', 'range' => PaypalType::asValues()],
             [['showApplePay'], 'in', 'range' => ShowWallet::asValues()],
             [['showGooglePay'], 'in', 'range' => ShowWallet::asValues()],
-            // [['paymentMethodOrder'], 'each', 'rule' => ['string']],
+            [['restrictCountries'], 'validateCountries', 'when' => fn() => $this->restrictCountries],
         ]);
     }
 
@@ -82,6 +82,24 @@ class Settings extends Model
     public function getGateway(): ?GatewayInterface
     {
         return Commerce::getInstance()?->getGateways()->getGatewayById($this->gatewayId);
+    }
+
+    /**
+     * @throws SiteNotFoundException
+     * @throws InvalidConfigException
+     */
+    public function validateCountries($attribute, $params, $validator): void {
+        if ($this->$attribute && !$this->hasEnabledCountries()) {
+            $this->addError($attribute, 'The store needs to have at least one country enabled when restricting countries.');
+        }
+    }
+
+    /**
+     * @throws SiteNotFoundException
+     * @throws InvalidConfigException
+     */
+    private function hasEnabledCountries(): bool {
+        return Commerce::getInstance()?->getStores()->getCurrentStore()->settings->countriesList !== [];
     }
 
     public function getButtonThemes(): array
