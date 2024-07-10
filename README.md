@@ -84,7 +84,6 @@ composer require craft-unit/craft-stripe-express-checkout
 ```twig
 {{ craft.expressCheckout.buttons({ 
   cart: craft.commerce.carts.cart,
-  cancelUrl: '/cart',
  }) | raw }}
 ```
 ![Cart Page](https://i.imgur.com/X8wQrOm.png)
@@ -100,7 +99,6 @@ You can find all the options in the [Stripe documentation](https://docs.stripe.c
 | phoneNumberRequired | Checking this box will prompt the user for their phone number. |
 | restrictCountries | Checking this will restrict the Stripe 'allowedCountries' to your country list in Commerce -> Store Settings -> Store -> Country List. |
 | successUrl | The URL that Stripe redirects to after a successful transaction. The 'successUrl' gets a query parameter called 'number' that contains the order number. |
-| cancelUrl | The URL that Stripe will redirect to after the user abandons the checkout process. By default, this is the URL the user came from. |
 | loaderTemplate | The path to the loader template. |
 | buttonHeight | The height of the buttons. |
 | applePayTheme | The theme of the Apple Pay button. |

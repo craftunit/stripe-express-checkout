@@ -68,7 +68,6 @@ class StripeController extends Controller
         /* @var Settings $settings */
         $settings = StripeExpressCheckout::getInstance()->getSettings();
         $order->setGatewayId($settings->gatewayId);
-        $order->cancelUrl = $options['cancelUrl'] ?? null;
 
         $redirect = null;
         /** @var ?Transaction $transaction */

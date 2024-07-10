@@ -106,7 +106,6 @@ class Variable
 
         $amountInCents = (int) ($order->getTotal() * 100);
 
-        // dd($order->getTotal(), $amountInCents) ;
         $options = array_merge([
             'id' => $id,
             'amount' => $amountInCents,

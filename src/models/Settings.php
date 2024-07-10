@@ -33,7 +33,6 @@ class Settings extends Model
     public bool $phoneNumberRequired = false;
     public bool $restrictCountries = false;
     public ?string $successUrl = null;
-    public ?string $cancelUrl = null;
     public ?string $loaderTemplate = null;
 
     /* APPEARANCE */
@@ -57,7 +56,7 @@ class Settings extends Model
     {
         return array_merge(parent::defineRules(), [
             [['gatewayId', 'successUrl'], 'required'],
-            [['gatewayId', 'successUrl', 'cancelUrl', 'loaderTemplate', 'phoneField'], 'string'],
+            [['gatewayId', 'successUrl', 'loaderTemplate', 'phoneField'], 'string'],
             [['shippingAddressRequired', 'phoneNumberRequired', 'restrictCountries'], 'boolean'],
             [['phoneField'], 'required', 'when' => fn() => $this->phoneNumberRequired],
             [['maxColumns', 'maxRows'], 'integer', 'min' => 0],
