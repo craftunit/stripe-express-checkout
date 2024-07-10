@@ -78,13 +78,15 @@ class StripeExpressCheckout {
       emailRequired: true,
       allowedShippingCountries: this.options.allowedCountries || [],
       shippingAddressRequired: this.options.shippingAddressRequired || false,
-      shippingRates: this.options.shippingRates || [],
+      // shippingAddressRequired: false,
+      // shippingRates: this.options.shippingRates || [],
       phoneNumberRequired: this.options.phoneNumberRequired || false,
       business: {
         name: this.options.businessName || '',
       },
       lineItems: this.options.lineItems,
       applePay: this.options.applePay || {},
+      ...(this.options.shippingAddressRequired && this.options.shippingRates && { shippingRates: this.options.shippingRates })
     };
   }
 
@@ -109,7 +111,7 @@ class StripeExpressCheckout {
       this.orderNumber = orderNumber;
     }
 
-    this.elements.update({ amount: total.amount, shippingRates });
+    this.elements.update({ amount: total.amount });
     event.resolve({ lineItems, shippingRates, applePay });
     this.options = {
       ...this.options,
@@ -118,16 +120,19 @@ class StripeExpressCheckout {
       applePay,
     };
 
-    const firstShippingMethod = shippingRates.at(0);
+    console.log("SHIPPINGADDRESSCHANGE END:", event)
+
+/*    const firstShippingMethod = shippingRates.at(0);
     if (firstShippingMethod) {
-      console.log('firstShippingMethod', firstShippingMethod);
       this.expressCheckoutElement.emit('shippingratechange', { shippingRate: firstShippingMethod })
-    }
+    }*/
   }
 
   onShippingRateChange = async event => {
+    console.log("SHIPPINGRATECHANGE START:", event);
     // TODO: Update amount based on shipping rate; use fetch to get new amount and update order
     const { shippingRate } = event;
+    console.log("FETCH SHIPPING RATE:", shippingRate.id)
     const res = await fetch('/actions/stripe-express-checkout/stripe/update-shipping-rate', {
       method: 'POST',
       headers: {
@@ -147,12 +152,20 @@ class StripeExpressCheckout {
       this.orderNumber = orderNumber;
     }
 
+    console.log(total.amount);
+
     this.elements.update({ amount: total.amount });
-    event.resolve({
-      applePay,
-      lineItems,
-      shippingRates,
-    });
+
+    console.log("SHIPPINGRATECHANGE END:", event)
+
+    // TODO: on initial load event.resolve is undefined?
+    if (event.resolve) {
+      event.resolve({
+        lineItems,
+        shippingRates,
+        applePay,
+      });
+    }
     this.options = {
       ...this.options,
       lineItems,
@@ -163,6 +176,7 @@ class StripeExpressCheckout {
 
   /* HANDLE EVENTS */
   onClick = event => {
+    console.log(this);
     event.resolve(this.onClickResolveOptions);
   }
 
@@ -186,6 +200,7 @@ class StripeExpressCheckout {
       return;
     }
 
+    if (!this.orderNumber) return;
     const res = await fetch('/actions/stripe-express-checkout/stripe/cancel', {
       method: 'POST',
       headers: {
