@@ -40,11 +40,11 @@ Commerce-Stripe.
 
 ## Requirements
 
-- <a href="https://stripe.com" target="_blank">Stripe Account</a>
-- <a href="https://github.com/craftcms/cms" target="_blank">Craft CMS ^4.7.0</a>
+- [Stripe Account](https://stripe.com)
 - PHP >= 8.2
-- <a href="https://github.com/craftmcs/commerce" target="_blank">Craft Commerce ^4.0.0</a>
-- <a href="https://github.com/craftcms/commerce-stripe" target="_blank">Craft Commerce Stripe ^4.0.0</a>
+- [Craft CMS ^5.0.0](https://github.com/craft/cms)
+- [Craft Commerce ^5.0.0](https://github.com/craftmcs/commerce)
+- [Craft Commerce Stripe ^5.0.0](https://github.com/craftcms/commerce-stripe)
 
 ## Installation
 
@@ -52,6 +52,7 @@ You can install this plugin from the Plugin Store or with Composer.
 
 #### From the Plugin Store
 
+e
 Go to the Plugin Store in your project’s Control Panel and search for “Stripe Express Checkout”. Then press “Install”.
 
 #### With Composer
@@ -74,7 +75,8 @@ composer require craft-unit/craft-stripe-express-checkout
 1. Create a [Stripe Account](https://stripe.com) or use an existing one.
 2. Install [Craft Commerce](https://github.com/craftcms/commerce) and
    the [Stripe Gateway Plugin](https://github.com/craftcms/commerce-stripe).
-3. Follow the [setup](https://github.com/craftcms/commerce-stripe#setup) instruction for the [Stripe Gateway Plugin](https://github.com/craftcms/commerce-stripe).
+3. Follow the [setup](https://github.com/craftcms/commerce-stripe#setup) instruction for
+   the [Stripe Gateway Plugin](https://github.com/craftcms/commerce-stripe).
 4. Go to the plugin settings in the sidebar and select the gateway you just created.
 5. Render the buttons on your products and cart page.
 6. Be sure to handle the order complete event. You can use the `fetch` API to ask for the order and return it to the
