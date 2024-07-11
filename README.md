@@ -40,11 +40,11 @@ Commerce-Stripe.
 
 ## Requirements
 
-- [Stripe Account](https://stripe.com)
+- [Stripe Account](https://stripe.com){:target="_blank"}
 - PHP >= 8.2
-- [Craft CMS ^5.0.0](https://github.com/craft/cms)
-- [Craft Commerce ^5.0.0](https://github.com/craftmcs/commerce)
-- [Craft Commerce Stripe ^5.0.0](https://github.com/craftcms/commerce-stripe)
+- [Craft CMS ^5.0.0](https://github.com/craftcms/cms){:target="_blank"}
+- [Craft Commerce ^5.0.0](https://github.com/craftcms/commerce){:target="_blank"}
+- [Craft Commerce Stripe ^5.0.0](https://github.com/craftcms/commerce-stripe){:target="_blank"}
 
 ## Installation
 
