@@ -71,19 +71,14 @@ composer require craft-unit/craft-stripe-express-checkout
 
 ## Setup
 
-1. Install [Craft Commerce](https://github.com/craftcms/commerce)  and
+1. Create a [Stripe Account](https://stripe.com) or use an existing one.
+2. Install [Craft Commerce](https://github.com/craftcms/commerce) and
    the [Stripe Gateway Plugin](https://github.com/craftcms/commerce-stripe).
-2. Create a [Stripe Account](https://stripe.com) or use an existing one.
-3. Create a new Gateway under Commerce -> System Settings -> Gateways.
-   See [Stripe Gateway Documentation](https://github.com/craftcms/commerce-stripe?tab=readme-ov-file#setup).
-    - Set the Gateway Type to Stripe.
-    - Set the Publishable Key and Secret Key.
-    - After saving the gateway, you get a webhook endpoint. You will need to create a new webhook in your Stripe
-      account. This can be a local endpoint or a live endpoint. Follow the instructions in your Stripe account.
+3. Follow the [setup](https://github.com/craftcms/commerce-stripe#setup) instruction for the [Stripe Gateway Plugin](https://github.com/craftcms/commerce-stripe).
 4. Go to the plugin settings in the sidebar and select the gateway you just created.
 5. Render the buttons on your products and cart page.
 6. Be sure to handle the order complete event. You can use the `fetch` API to ask for the order and return it to the
-   success page.
+   success page. See the [Order complete](#order-complete) section for more information.
 
 ### Products page
 
