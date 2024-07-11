@@ -73,6 +73,7 @@ class StripeController extends Controller
         /** @var ?Transaction $transaction */
         $transaction = null;
         $redirectData = null;
+
         try {
             /* @var PaymentIntentForm $paymentForm */
             $paymentForm = $settings->gateway->getPaymentFormModel();

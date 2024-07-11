@@ -52,7 +52,6 @@ class Variable
             }
         }
 
-
         $settings = StripeExpressCheckout::getInstance()->settings;
         $shippingRates = [];
         if ($settings->shippingAddressRequired) {
@@ -94,11 +93,11 @@ class Variable
         }
 
         $lineItems = [];
+
         foreach ($order->getLineItems() as $lineItem) {
-            /* @var LineItem $lineItem */
             $lineItems[] = [
                 'name' => $lineItem->purchasable->title,
-                'amount' => (int) ($lineItem->salePrice * 100),
+                'amount' => (int) ($lineItem->salePrice * 100) * $lineItem->qty,
             ];
         }
 

@@ -13,19 +13,19 @@ class StripeExpressCheckout {
     this.items = options.items;
     // this.orderNumber = this.options.orderNumber;
     this.stripe = Stripe(this.publishableKey);
-    this.init();
+    this.#init();
   }
 
-  init() {
-    this.elements = this.stripe.elements(this.elementsOptions);
-    this.expressCheckoutElement = this.elements.create('expressCheckout', this.expressCheckoutOptions);
+  #init() {
+    this.elements = this.stripe.elements(this.#elementOptions);
+    this.expressCheckoutElement = this.elements.create('expressCheckout', this.#expressCheckoutOptions);
     this.expressCheckoutElement.mount(this.expressElement);
-    this.expressCheckoutElement.on('confirm', this.onConfirm);
-    this.expressCheckoutElement.on('ready', this.onReady);
-    this.expressCheckoutElement.on('click', this.onClick);
-    this.expressCheckoutElement.on('shippingaddresschange', this.onShippingAddressChanged);
-    this.expressCheckoutElement.on('shippingratechange', this.onShippingRateChange);
-    this.expressCheckoutElement.on('cancel', this.onCancel);
+    this.expressCheckoutElement.on('confirm', this.#onConfirm);
+    this.expressCheckoutElement.on('ready', this.#onReady);
+    this.expressCheckoutElement.on('click', this.#onClick);
+    this.expressCheckoutElement.on('shippingaddresschange', this.#onShippingAddressChanged);
+    this.expressCheckoutElement.on('shippingratechange', this.#onShippingRateChange);
+    this.expressCheckoutElement.on('cancel', this.#onCancel);
   }
 
   static init(id, options = {}) {
@@ -40,11 +40,26 @@ class StripeExpressCheckout {
           [name]: instance,
         };
       }
+      // emit event
+      window.dispatchEvent(new CustomEvent('stripe-express-checkout:init', {
+        detail: {
+          name,
+          instance,
+        },
+      }));
     }
   }
 
+  static getByName(name) {
+    if (!window.stripeExpressCheckouts) return;
+
+    if (!window.stripeExpressCheckouts[name]) return null;
+
+    return window.stripeExpressCheckouts[name];
+  }
+
   /* GETTERS */
-  get elementsOptions() {
+  get #elementOptions() {
     return {
       mode: 'payment',
       currency: this.options.currency,
@@ -52,7 +67,7 @@ class StripeExpressCheckout {
     }
   }
 
-  get expressCheckoutOptions() {
+  get #expressCheckoutOptions() {
     return {
       buttonTheme: this.options.buttonTheme,
       buttonHeight: this.options.buttonHeight,
@@ -63,7 +78,7 @@ class StripeExpressCheckout {
     };
   }
 
-  get createIntentOptions() {
+  get #createIntentOptions() {
     return {
       [window.csrfTokenName]: window.csrfTokenValue,
       items: this.options.items,
@@ -72,7 +87,7 @@ class StripeExpressCheckout {
     };
   }
 
-  get onClickResolveOptions() {
+  get #onClickResolveOptions() {
     return {
       // TODO: Do we always need to request email? probably yes
       emailRequired: true,
@@ -90,7 +105,19 @@ class StripeExpressCheckout {
     };
   }
 
-  onShippingAddressChanged = async event => {
+  setItemQty = (id, qty) => {
+    this.options.items = this.options.items.map(item => {
+      if (item.id === id) {
+        return {
+          ...item,
+          qty,
+        };
+      }
+      return item;
+    });
+  }
+
+  #onShippingAddressChanged = async event => {
     const { address } = event;
     const res = await fetch('/actions/stripe-express-checkout/stripe/update-shipping-address', {
       method: 'POST',
@@ -105,6 +132,7 @@ class StripeExpressCheckout {
         orderNumber: this.orderNumber,
       })
     });
+
     // TODO: Test applePay; See documentation: https://docs.stripe.com/js/elements_object/express_checkout_element_shippingaddresschange_event
     const { lineItems, orderNumber, total, shippingRates, applePay } = await res.json();
     if (orderNumber) {
@@ -121,18 +149,12 @@ class StripeExpressCheckout {
     };
 
     console.log("SHIPPINGADDRESSCHANGE END:", event)
-
-/*    const firstShippingMethod = shippingRates.at(0);
-    if (firstShippingMethod) {
-      this.expressCheckoutElement.emit('shippingratechange', { shippingRate: firstShippingMethod })
-    }*/
   }
 
-  onShippingRateChange = async event => {
+  #onShippingRateChange = async event => {
     console.log("SHIPPINGRATECHANGE START:", event);
     // TODO: Update amount based on shipping rate; use fetch to get new amount and update order
     const { shippingRate } = event;
-    console.log("FETCH SHIPPING RATE:", shippingRate.id)
     const res = await fetch('/actions/stripe-express-checkout/stripe/update-shipping-rate', {
       method: 'POST',
       headers: {
@@ -152,20 +174,16 @@ class StripeExpressCheckout {
       this.orderNumber = orderNumber;
     }
 
-    console.log(total.amount);
-
     this.elements.update({ amount: total.amount });
 
     console.log("SHIPPINGRATECHANGE END:", event)
 
     // TODO: on initial load event.resolve is undefined?
-    if (event.resolve) {
-      event.resolve({
-        lineItems,
-        shippingRates,
-        applePay,
-      });
-    }
+    event.resolve({
+      lineItems,
+      shippingRates,
+      applePay,
+    });
     this.options = {
       ...this.options,
       lineItems,
@@ -175,14 +193,13 @@ class StripeExpressCheckout {
   }
 
   /* HANDLE EVENTS */
-  onClick = event => {
-    console.log(this);
-    event.resolve(this.onClickResolveOptions);
+  #onClick = event => {
+    event.resolve(this.#onClickResolveOptions);
   }
 
-  onReady = () => this.loadingStripe.remove();
+  #onReady = () => this.loadingStripe.remove();
 
-  onCancel = async event => {
+  #onCancel = async event => {
     // Do not delete a cart on cancel; user might want to try again
     if (this.options.cart) {
       // reset cart addresses; this is needed to make sure the cart is valid after cancel
@@ -216,7 +233,7 @@ class StripeExpressCheckout {
     this.orderNumber = null;
   }
 
-  onPaymentFailed = event => {
+  #onPaymentFailed = event => {
     window.dispatchEvent(new CustomEvent('stripe-express-checkout:error', {
       detail: {
         name: this.name,
@@ -226,8 +243,8 @@ class StripeExpressCheckout {
     }));
   }
 
-  onConfirm = async (event) => {
-    event.paymentFailed = this.onPaymentFailed;
+  #onConfirm = async (event) => {
+    event.paymentFailed = this.#onPaymentFailed;
     const {error: submitError} = await this.elements.submit();
     if (submitError) {
       this.error.textContent = submitError.message;
@@ -239,7 +256,7 @@ class StripeExpressCheckout {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-      body: JSON.stringify(this.createIntentOptions)
+      body: JSON.stringify(this.#createIntentOptions)
     });
     const {
       client_secret: clientSecret,

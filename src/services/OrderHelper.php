@@ -52,12 +52,17 @@ class OrderHelper extends Component
 
         // Add items to order
         foreach ($items as $item) {
+            $qty = $item['qty'];
             $purchasable = Commerce::getInstance()?->getPurchasables()->getPurchasableById($item['id']);
             if (!$purchasable) {
                 throw new ElementNotFoundException('Purchasable not found');
             }
+
             $lineItem = Commerce::getInstance()?->getLineItems()->createLineItem($order, $purchasable->id, []);
-            $order->addLineItem($lineItem);
+
+            for ($i = 0; $i < $qty; $i++) {
+                $order->addLineItem($lineItem);
+            }
         }
 
         return $order;
