@@ -207,11 +207,14 @@ class ProcessStripeWebhook implements EventHandlerInterface
             $billingDetails['address']['country'] = $shippingDetails['address']['country'];
         }
 
-        $billingAddress = $this->updateAddress($order, $billingDetails, AddressType::Billing);
-        if ($billingAddress === null) {
-            return false;
+        $billingAddress = null;
+        if (!empty($billingDetails['address']['line1'] && !empty($billingDetails['address']['city']) && !empty($billingDetails['address']['postal_code']))) {
+            $billingAddress = $this->updateAddress($order, $billingDetails, AddressType::Billing);
+            if ($billingAddress === null) {
+                return false;
+            }
+            $order->setBillingAddress($billingAddress);
         }
-        $order->setBillingAddress($billingAddress);
 
         if ($settings->shippingAddressRequired && !empty($shippingDetails['address'])) {
             $shippingAddress = $this->updateAddress($order, $shippingDetails, AddressType::Shipping);
