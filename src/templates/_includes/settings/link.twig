@@ -1,0 +1,20 @@
+{% import '_includes/forms' as forms %}
+
+{% macro stripeDocLink(href, title) %}
+  {% set baseUrl = 'https://docs.stripe.com/' %}
+  See <a href="{{ baseUrl }}{{ href }}" target="_blank">Stripe docs
+  (<code>{{ title ?? 'KEIN TITLE' }}</code>)</a> for more information.
+{% endmacro %}
+
+<div id="link" class="hidden">
+  {% namespace 'settings' %}
+    {{ forms.selectField({
+      name: 'showLink',
+      label: 'Show Button',
+      options: link.showWallet,
+      value: settings.showLink,
+      instructions: 'Show the Link button.',
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-paymentMethods-link', 'paymentMethods.link')
+    }) }}
+  {% endnamespace %}
+</div>

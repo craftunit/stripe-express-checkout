@@ -74,7 +74,7 @@ class StripeExpressCheckout {
       buttonType: this.options.buttonType,
       layout: this.options.layout,
       paymentMethodOrder: this.options.paymentMethodOrder,
-      wallets: this.options.wallets,
+      paymentMethods: this.options.wallets,
     };
   }
 

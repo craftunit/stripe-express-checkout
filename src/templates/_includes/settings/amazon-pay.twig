@@ -1,0 +1,20 @@
+{% import '_includes/forms' as forms %}
+
+{% macro stripeDocLink(href, title) %}
+  {% set baseUrl = 'https://docs.stripe.com/' %}
+  See <a href="{{ baseUrl }}{{ href }}" target="_blank">Stripe docs
+  (<code>{{ title ?? 'KEIN TITLE' }}</code>)</a> for more information.
+{% endmacro %}
+
+<div id="amazon-pay" class="hidden">
+  {% namespace 'settings' %}
+    {{ forms.selectField({
+      name: 'showAmazonPay',
+      label: 'Show Button',
+      options: amazonPay.showWallet,
+      value: settings.showAmazonPay,
+      instructions: 'Show the AmazonPay button.',
+      tip: _self.stripeDocLink('js/elements_object/create_express_checkout_element#express_checkout_element_create-options-paymentMethods-amazonPay', 'paymentMethods.amazonPay')
+    }) }}
+  {% endnamespace %}
+</div>

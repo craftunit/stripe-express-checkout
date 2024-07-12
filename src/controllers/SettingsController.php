@@ -67,7 +67,7 @@ class SettingsController extends Controller
         }
 
         // TODO: Use a more clean approach (different ShowWalletOptions for every paymentMethod?);
-        $showPayPalOptions = array_filter(ShowWallet::asOptions(), static fn($option) => $option !== ShowWallet::Always->name);
+        $showOptionsNoAlways = array_filter(ShowWallet::asOptions(), static fn($option) => $option !== ShowWallet::Always->name);
 
         return $this->renderTemplate('stripe-express-checkout', [
             'settings' => StripeExpressCheckout::getInstance()->settings,
@@ -86,7 +86,13 @@ class SettingsController extends Controller
             'paypal' => [
                 'themes' => PaypalTheme::asOptions(),
                 'types' => PaypalType::asOptions(),
-                'showWallet' => $showPayPalOptions,
+                'showWallet' => $showOptionsNoAlways,
+            ],
+            'amazonPay' => [
+                'showWallet' => ShowWallet::asOptions(),
+            ],
+            'link' => [
+                'showWallet' => $showOptionsNoAlways
             ],
             'overflow' => Overflow::asOptions(),
         ]);

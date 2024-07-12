@@ -33,6 +33,8 @@
   {% include 'stripe-express-checkout/_includes/settings/google-pay' %}
   {% include 'stripe-express-checkout/_includes/settings/apple-pay' %}
   {% include 'stripe-express-checkout/_includes/settings/pay-pal' %}
+  {% include 'stripe-express-checkout/_includes/settings/amazon-pay' %}
+  {% include 'stripe-express-checkout/_includes/settings/link' %}
 {% endset %}
 
 {% set title = "Stripe Express Checkout Settings" %}
@@ -61,6 +63,14 @@
       payPal: {
         label: 'PayPal'|t('plugin-handle'),
         url: '#pay-pal',
+      },
+      amazonPay: {
+        label: 'Amazon Pay'|t('plugin-handle'),
+        url: '#amazon-pay',
+      },
+      link: {
+        label: 'Link'|t('plugin-handle'),
+        url: '#link',
       },
     } %}
     {{ settingsHtml }}

@@ -50,6 +50,8 @@ class Settings extends Model
     public string $showApplePay = ShowWallet::Auto->value;
     public string $showGooglePay = ShowWallet::Auto->value;
     public string $showPayPal = ShowWallet::Auto->value;
+    public string $showLink = ShowWallet::Auto->value;
+    public string $showAmazonPay = ShowWallet::Auto->value;
     public ?string $phoneField = null;
 
     protected function defineRules(): array
@@ -125,6 +127,8 @@ class Settings extends Model
             'applePay' => $this->showApplePay,
             'googlePay' => $this->showGooglePay,
             'paypal' => $this->showPayPal,
+            'link' => $this->showLink,
+            'amazonPay' => $this->showAmazonPay,
         ];
     }
 }
