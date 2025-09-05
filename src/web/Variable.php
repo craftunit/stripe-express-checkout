@@ -5,6 +5,7 @@ namespace craftunit\craftstripeexpresscheckout\web;
 use Craft;
 use craft\commerce\elements\Order;
 use craft\commerce\models\LineItem;
+use craft\commerce\models\ShippingMethod;
 use craft\commerce\Plugin as Commerce;
 use craft\helpers\App;
 use craftunit\craftstripeexpresscheckout\Plugin as StripeExpressCheckout;
@@ -53,10 +54,20 @@ class Variable
         }
 
         $settings = StripeExpressCheckout::getInstance()->settings;
+        if (!$settings->validate()) {
+            throw new Exception("Settings are invalid.");
+        }
+
         $shippingRates = [];
         if ($settings->shippingAddressRequired) {
-            $commerceShippingMethods = Commerce::getInstance()?->getShippingMethods()->getAllShippingMethods();
+            $commerceShippingMethods = Commerce::getInstance()?->getShippingMethods()->getAllShippingMethods()->all();
+            /** @var ShippingMethod $shippingMethod */
             foreach ($commerceShippingMethods as $shippingMethod) {
+                // getAllShippingMethods() returns disabled shippingMethods, skip those
+                if (!$shippingMethod->enabled) {
+                    continue;
+                }
+
                 $shippingRates[] = [
                     'id' => $shippingMethod->handle,
                     'name' => $shippingMethod->name,
@@ -111,7 +122,7 @@ class Variable
             'lineItems' => $lineItems,
             'businessName' => $options['businessName'] ?? Craft::$app->getSystemName(),
             'country' => $store->settings->getLocationAddress()->countryCode,
-            'currency' => strtolower(Commerce::getInstance()?->getCarts()->getCart()->currency),
+            'currency' => strtolower($order->currency),
             'stripeApiKey' => App::parseEnv($settings->gateway['publishableKey']),
             'style' => [],
         ], $options);

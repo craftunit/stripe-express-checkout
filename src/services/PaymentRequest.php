@@ -24,6 +24,10 @@ class PaymentRequest extends Component
         $shippingMethods = Commerce::getInstance()?->getShippingMethods()->getAllShippingMethods();
         $shippingRates = [];
         foreach ($shippingMethods as $shippingMethod) {
+            if (!$shippingMethod->enabled) {
+                continue;
+            }
+
             $shippingRates[] = [
                 'id' => $shippingMethod->handle,
                 'displayName' => $shippingMethod->name,
