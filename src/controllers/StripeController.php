@@ -169,7 +169,12 @@ class StripeController extends Controller
         // autoSetShippingMethod looks for the first available shipping method and sets it on the order
         // Set shipping method to null to trigger autoSetShippingMethod
         $order->shippingMethodHandle = null;
-        $order->autoSetShippingMethod();
+
+        // Funktioniert nur, wenn das Settings im Commerce Store auf true gesetzt ist.
+        // $order->autoSetShippingMethod();
+
+        $availableMethodOptions = $order->getAvailableShippingMethodOptions();
+        $order->shippingMethodHandle = array_key_first($availableMethodOptions);
 
         if ($this->hasEventHandlers(self::EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_BEFORE_SAVE)) {
             $this->trigger(self::EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_BEFORE_SAVE, new UpdateOrderEvent($order));
