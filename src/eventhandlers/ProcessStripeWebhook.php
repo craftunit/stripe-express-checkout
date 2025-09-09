@@ -5,7 +5,6 @@ namespace craftunit\craftstripeexpresscheckout\eventhandlers;
 use Craft;
 use craft\base\Event;
 use craft\commerce\elements\Order;
-use craft\commerce\errors\OrderStatusException;
 use craft\commerce\Plugin as Commerce;
 use craft\commerce\stripe\base\Gateway;
 use craft\commerce\stripe\gateways\PaymentIntents;
@@ -17,7 +16,6 @@ use craftunit\craftstripeexpresscheckout\events\ModifyOrderDetailsEvent;
 use craftunit\craftstripeexpresscheckout\events\ReceiveStripeWebhookEvent;
 use craftunit\craftstripeexpresscheckout\events\UpdateAddressEvent;
 use craftunit\craftstripeexpresscheckout\events\UpdateOrderCustomerEvent;
-use craftunit\craftstripeexpresscheckout\events\UpdateOrderEvent;
 use craftunit\craftstripeexpresscheckout\events\WebhookFailedEvent;
 use craftunit\craftstripeexpresscheckout\helpers\StripeLogger;
 use craftunit\craftstripeexpresscheckout\interfaces\EventHandlerInterface;
@@ -29,8 +27,6 @@ use yii\base\Exception;
 class ProcessStripeWebhook implements EventHandlerInterface
 {
     public const EVENT_MODIFY_ORDER_DETAILS = 'modifyOrderDetails';
-    public const EVENT_BEFORE_ORDER_COMPLETE = 'beforeOrderComplete';
-    public const EVENT_AFTER_ORDER_COMPLETE = 'afterOrderComplete';
     public const EVENT_BEFORE_SAVE_SHIPPING_ADDRESS = 'beforeSaveShippingAddress';
     public const EVENT_AFTER_SAVE_SHIPPING_ADDRESS = 'afterSaveShippingAddress';
     public const EVENT_BEFORE_SAVE_BILLING_ADDRESS = 'beforeSaveBillingAddress';
@@ -106,20 +102,7 @@ class ProcessStripeWebhook implements EventHandlerInterface
                 return;
             }
 
-            if (Event::hasHandlers(self::class, self::EVENT_BEFORE_ORDER_COMPLETE)) {
-                Event::trigger(self::class, self::EVENT_BEFORE_ORDER_COMPLETE, new UpdateOrderEvent($order));
-            }
-
-            if (!$this->completeOrder($order, $metadata)) {
-                $message = 'Error completing order: ' . json_encode($order->getErrors(), JSON_THROW_ON_ERROR);
-                Event::trigger(self::class, self::EVENT_WEBHOOK_FAILED, new WebhookFailedEvent($order, $message));
-                Craft::error($message, 'stripe');
-                return;
-            }
-
-            if (Event::hasHandlers(self::class, self::EVENT_AFTER_ORDER_COMPLETE)) {
-                Event::trigger(self::class, self::EVENT_AFTER_ORDER_COMPLETE, new UpdateOrderEvent($order));
-            }
+            Commerce::getInstance()->orderHistories->createOrderHistoryFromOrder($order, null);
         } catch (Exception $e) {
             $message = 'Error processing Stripe webhook: ' . $e->getMessage();
             Event::trigger(self::class, self::EVENT_WEBHOOK_FAILED, new WebhookFailedEvent($order ?? null, $message, $e));
@@ -245,8 +228,6 @@ class ProcessStripeWebhook implements EventHandlerInterface
         $address->title = $addressData['title'] ?? $address->title;
         $address->setAttributes([
             'fullName' => $addressData['name'] ?? $address->fullName,
-            'firstName' => $addressData['name'] ?? $address->firstName,
-            'lastName' => $addressData['name'] ?? $address->lastName,
             'addressLine1' => $addressData['address']['line1'] ?? $address->addressLine1,
             'addressLine2' => $addressData['address']['line2'] ?? null, // Set only if present
             'administrativeArea' => $addressData['address']['state'] ?? null, // Set only if present
@@ -280,39 +261,5 @@ class ProcessStripeWebhook implements EventHandlerInterface
         }
 
         return $address;
-    }
-
-    /**
-     * @throws OrderStatusException
-     * @throws Throwable
-     * @throws ElementNotFoundException
-     * @throws Exception
-     */
-    private function completeOrder(Order $order, array $metadata): bool
-    {
-        $commerce = Commerce::getInstance();
-        if ($commerce === null) {
-            throw new Exception('Commerce plugin not found');
-        }
-
-        $transactions = $commerce->transactions;
-        $payments = $commerce->payments;
-
-        $transaction = $transactions->getTransactionByHash($metadata['transaction_reference']);
-        if (!$transaction) {
-            // TODO: Add error handling when transaction is not found
-            return false;
-        }
-        $transaction->hash = md5(uniqid((string)mt_rand(), true));
-
-        $customerError = null;
-
-        try {
-            $payments->completePayment($transaction, $customerError);
-        } catch (\Exception $e) {
-            Craft::error("Error completing payment: $customerError" . $e->getMessage(), 'stripe');
-        }
-
-        return $order->markAsComplete();
     }
 }
