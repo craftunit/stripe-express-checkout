@@ -31,7 +31,7 @@ class PaymentRequest extends Component
             $shippingRates[] = [
                 'id' => $shippingMethod->handle,
                 'displayName' => $shippingMethod->name,
-                'amount' => $shippingMethod->getPriceForOrder($order) * 100,
+                'amount' => round($shippingMethod->getPriceForOrder($order) * 100),
             ];
         }
 

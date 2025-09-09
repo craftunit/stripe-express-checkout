@@ -72,7 +72,7 @@ class Variable
                     'id' => $shippingMethod->handle,
                     'name' => $shippingMethod->name,
                     'displayName' => $shippingMethod->name, // TODO: Add displayName to shipping method (translatable?)
-                    'amount' => $shippingMethod->getPriceForOrder($order) * 100,
+                    'amount' => round($shippingMethod->getPriceForOrder($order) * 100),
                 ];
             }
         }
@@ -108,7 +108,7 @@ class Variable
         foreach ($order->getLineItems() as $lineItem) {
             $lineItems[] = [
                 'name' => $lineItem->purchasable->title,
-                'amount' => (int) ($lineItem->salePrice * 100) * $lineItem->qty,
+                'amount' => (int) (($lineItem->salePrice + $lineItem->discount + $lineItem->tax) * 100) * $lineItem->qty,
             ];
         }
 
