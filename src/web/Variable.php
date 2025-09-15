@@ -37,21 +37,20 @@ class Variable
         if (!empty($options['cart'])) {
             $order = $options['cart'];
             $options['cart'] = true;
-        } elseif (isset($options['items']) || isset($options['itemId'])) {
+        } elseif (isset($options['items']) || isset($options['item'])) {
             $order = new Order();
         } else {
             throw new Exception('No cart or items provided');
         }
 
-        if (!empty($options['itemId'])) {
-            $itemId = $options['itemId'];
-            if (!is_numeric($itemId)) {
-                throw new Exception('Please pass a numeric item ID');
-            }
+        if (!empty($options['item'])) {
+            /** @var Variant $item */
+            $item = $options['item'];
             $options['items'][] = [
-                'id' => $itemId,
+                'id' => $item->id,
                 'qty' => 1
             ];
+            unset($options['item']);
         }
 
         if (!empty($options['items'])) {
@@ -122,7 +121,7 @@ class Variable
         foreach ($order->getLineItems() as $lineItem) {
             $lineItems[] = [
                 'name' => $lineItem->purchasable->title,
-                'amount' => (int)(($lineItem->salePrice + $lineItem->discount + $lineItem->tax) * 100) * $lineItem->qty,
+                'amount' => (int)($lineItem->total * 100),
             ];
         }
 
