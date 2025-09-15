@@ -56,12 +56,6 @@ class Variable
 
         if (!empty($options['items'])) {
             foreach ($options['items'] as $item) {
-                /*$lineItem = Commerce::getInstance()?->lineItems->createLineItem(
-                    $order,
-                    $item['id'],
-                    $item['qty']
-                );*/
-
                 $lineItem = Commerce::getInstance()?->lineItems->create(
                     $order,
                     [
