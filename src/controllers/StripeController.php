@@ -87,7 +87,7 @@ class StripeController extends Controller
             );
             $clientSecret = $transaction->response['client_secret'];
             $order->recalculate();
-            Craft::$app->getElements()->saveElement($order);
+            Craft::$app->getElements()->saveElement($order, false);
 
             return $this->asJson([
                 'client_secret' => $clientSecret,

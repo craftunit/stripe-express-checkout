@@ -4,6 +4,7 @@ namespace craftunit\craftstripeexpresscheckout\web;
 
 use Craft;
 use craft\commerce\elements\Order;
+use craft\commerce\elements\Variant;
 use craft\commerce\models\LineItem;
 use craft\commerce\models\ShippingMethod;
 use craft\commerce\Plugin as Commerce;
@@ -31,16 +32,28 @@ class Variable
      */
     public function buttons(array $options = []): string
     {
+
+        /* @var Order $order */
         if (!empty($options['cart'])) {
             $order = $options['cart'];
             $options['cart'] = true;
-        } elseif ($options['items']) {
+        } elseif (isset($options['items']) || isset($options['itemId'])) {
             $order = new Order();
         } else {
             throw new Exception('No cart or items provided');
         }
 
-        /* @var Order|null $order */
+        if (!empty($options['itemId'])) {
+            $itemId = $options['itemId'];
+            if (!is_numeric($itemId)) {
+                throw new Exception('Please pass a numeric item ID');
+            }
+            $options['items'][] = [
+                'id' => $itemId,
+                'qty' => 1
+            ];
+        }
+
         if (!empty($options['items'])) {
             foreach ($options['items'] as $item) {
                 $lineItem = Commerce::getInstance()?->lineItems->createLineItem(
@@ -108,13 +121,13 @@ class Variable
         foreach ($order->getLineItems() as $lineItem) {
             $lineItems[] = [
                 'name' => $lineItem->purchasable->title,
-                'amount' => (int) (($lineItem->salePrice + $lineItem->discount + $lineItem->tax) * 100) * $lineItem->qty,
+                'amount' => (int)(($lineItem->salePrice + $lineItem->discount + $lineItem->tax) * 100) * $lineItem->qty,
             ];
         }
 
         $options = array_merge($defaultOptions, $options);
 
-        $amountInCents = (int) ($order->getTotal() * 100);
+        $amountInCents = (int)($order->getTotal() * 100);
 
         $options = array_merge([
             'id' => $id,

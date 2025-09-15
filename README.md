@@ -88,6 +88,12 @@ composer require craft-unit/craft-stripe-express-checkout
 
 ```twig 
 {{ craft.expressCheckout.buttons({
+    itemsId: product.defaultVariant.id
+}) | raw }}
+
+{# or... #}
+
+{{ craft.expressCheckout.buttons({
     items: [{
       id: product.defaultVariant.id,
       qty: 1,
@@ -130,6 +136,8 @@ You can find all the options in the [Stripe documentation](https://docs.stripe.c
 
 | Setting Name              | Description                                                                                                                                              |
 |---------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `items`                   | List of item object with and `id` and `qty`.                                                                                                             |
+| `itemId`                  | ID of the variant to sell.                                                                                                                               |
 | `gatewayId`               | Select the gateway through which payments will be processed.                                                                                             |
 | `shippingAddressRequired` | Checking this will prompt the user for their shipping address.                                                                                           |
 | `phoneNumberRequired`     | Checking this box will prompt the user for their phone number.                                                                                           |
@@ -183,22 +191,20 @@ You can find all the options in the [Stripe documentation](https://docs.stripe.c
 
 ### Event Hooks
 
-| Class                | Event                                           |
-|----------------------|-------------------------------------------------|
-| StripeController     | EVENT_BEFORE_UPDATE_SHIPPING_RATE               |
-| StripeController     | EVENT_AFTER_UPDATE_SHIPPING_RATE                |
-| StripeController     | EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_BEFORE_SAVE |
-| StripeController     | EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_AFTER_SAVE  |
-| ProcessStripeWebhook | EVENT_MODIFY_ORDER_DETAILS                      |
-| ProcessStripeWebhook | EVENT_BEFORE_ORDER_COMPLETE                     |
-| ProcessStripeWebhook | EVENT_AFTER_ORDER_COMPLETE                      |
-| ProcessStripeWebhook | EVENT_BEFORE_SAVE_SHIPPING_ADDRESS              |
-| ProcessStripeWebhook | EVENT_AFTER_SAVE_SHIPPING_ADDRESS               |
-| ProcessStripeWebhook | EVENT_BEFORE_SAVE_BILLING_ADDRESS               |
-| ProcessStripeWebhook | EVENT_AFTER_SAVE_BILLING_ADDRESS                |
-| ProcessStripeWebhook | EVENT_BEFORE_SET_ORDER_CUSTOMER                 |
-| ProcessStripeWebhook | EVENT_WEBHOOK_FAILED                            |
-| ProcessStripeWebhook | EVENT_RECEIVED_WEBHOOK                          |
+| Class                | Event                                             |
+|----------------------|---------------------------------------------------|
+| StripeController     | `EVENT_BEFORE_UPDATE_SHIPPING_RATE`               |
+| StripeController     | `EVENT_AFTER_UPDATE_SHIPPING_RAT`E                |
+| StripeController     | `EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_BEFORE_SAVE` |
+| StripeController     | `EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_AFTER_SAVE`  |
+| ProcessStripeWebhook | `EVENT_MODIFY_ORDER_DETAILS`                      |
+| ProcessStripeWebhook | `EVENT_BEFORE_SAVE_SHIPPING_ADDRESS`              |
+| ProcessStripeWebhook | `EVENT_AFTER_SAVE_SHIPPING_ADDRESS`               |
+| ProcessStripeWebhook | `EVENT_BEFORE_SAVE_BILLING_ADDRESS`               |
+| ProcessStripeWebhook | `EVENT_AFTER_SAVE_BILLING_ADDRESS`                |
+| ProcessStripeWebhook | `EVENT_BEFORE_SET_ORDER_CUSTOMER`                 |
+| ProcessStripeWebhook | `EVENT_WEBHOOK_FAILED`                            |
+| ProcessStripeWebhook | `EVENT_RECEIVED_WEBHOOK`                          |
 
 ### Frontend JS
 

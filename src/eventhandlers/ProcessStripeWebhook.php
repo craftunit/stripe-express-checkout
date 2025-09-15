@@ -6,6 +6,7 @@ use Craft;
 use craft\base\Event;
 use craft\commerce\elements\Order;
 use craft\commerce\Plugin as Commerce;
+use craft\commerce\records\Transaction;
 use craft\commerce\stripe\base\Gateway;
 use craft\commerce\stripe\gateways\PaymentIntents;
 use craft\elements\Address;
@@ -103,6 +104,11 @@ class ProcessStripeWebhook implements EventHandlerInterface
             }
 
             Commerce::getInstance()->orderHistories->createOrderHistoryFromOrder($order, null);
+
+            $transaction = $order->lastTransaction;
+            $transactionRecord = Transaction::findOne($transaction->id);
+            $transactionRecord->response = $orderDetails;
+            $transactionRecord->save(false);
         } catch (Exception $e) {
             $message = 'Error processing Stripe webhook: ' . $e->getMessage();
             Event::trigger(self::class, self::EVENT_WEBHOOK_FAILED, new WebhookFailedEvent($order ?? null, $message, $e));
