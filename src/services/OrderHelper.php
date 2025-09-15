@@ -4,6 +4,7 @@ namespace craftunit\craftstripeexpresscheckout\services;
 
 use Craft;
 use craft\commerce\elements\Order as OrderElement;
+use craft\commerce\models\LineItem;
 use craft\commerce\Plugin as Commerce;
 use craft\errors\ElementNotFoundException;
 use craft\helpers\Json;
@@ -58,11 +59,12 @@ class OrderHelper extends Component
                 throw new ElementNotFoundException('Purchasable not found');
             }
 
-            $lineItem = Commerce::getInstance()?->getLineItems()->createLineItem($order, $purchasable->id, []);
-
-            for ($i = 0; $i < $qty; $i++) {
-                $order->addLineItem($lineItem);
-            }
+            /** @var LineItem $lineItem */
+            $lineItem = Commerce::getInstance()?->getLineItems()->create($order, [
+                'purchasableId' => $purchasable->id
+            ]);
+            $lineItem->qty = $qty;
+            $order->addLineItem($lineItem);
         }
 
         return $order;
