@@ -93,8 +93,6 @@ class StripeExpressCheckout {
       emailRequired: true,
       allowedShippingCountries: this.options.allowedCountries || [],
       shippingAddressRequired: this.options.shippingAddressRequired || false,
-      // shippingAddressRequired: false,
-      // shippingRates: this.options.shippingRates || [],
       phoneNumberRequired: this.options.phoneNumberRequired || false,
       business: {
         name: this.options.businessName || '',
@@ -105,9 +103,14 @@ class StripeExpressCheckout {
     };
   }
 
-  setItemQty = (id, qty) => {
+  setItemQty = async (qty, id = null) => {
+    let purchasableId = id;
+    if (!purchasableId) {
+      purchasableId = this.options.items.at(0)?.id;
+    }
+
     this.options.items = this.options.items.map(item => {
-      if (item.id === id) {
+      if (item.id === purchasableId) {
         return {
           ...item,
           qty,
@@ -115,6 +118,28 @@ class StripeExpressCheckout {
       }
       return item;
     });
+
+    const res = await fetch('/actions/stripe-express-checkout/stripe/update-line-item', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        [window.csrfTokenName]: window.csrfTokenValue,
+        purchasableId,
+        qty,
+        items: this.options.items,
+        ...(this.orderNumber && { orderNumber: this.orderNumber })
+      })
+    });
+
+    const { lineItems, amount } = await res.json();
+
+    this.options.lineItems = lineItems;
+    this.options.amount = amount;
+
+    this.elements.update({ amount, lineItems });
   }
 
   #onShippingAddressChanged = async event => {
@@ -129,7 +154,7 @@ class StripeExpressCheckout {
         [window.csrfTokenName]: window.csrfTokenValue,
         address,
         items: this.options.items,
-        orderNumber: this.orderNumber,
+        ...(this.orderNumber && { orderNumber: this.orderNumber })
       })
     });
 

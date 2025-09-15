@@ -3,6 +3,7 @@
 namespace craftunit\craftstripeexpresscheckout\controllers;
 
 use Craft;
+use craft\commerce\base\AdjusterInterface;
 use craft\commerce\elements\Order;
 use craft\commerce\models\Transaction;
 use craft\commerce\Plugin as Commerce;
@@ -24,6 +25,7 @@ use Throwable;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\Response;
 
 /**
@@ -254,6 +256,69 @@ class StripeController extends Controller
         return $this->asJson([
             'status' => 'success',
             'message' => 'Addresses reset',
+        ]);
+    }
+
+    /**
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws MethodNotAllowedHttpException
+     * @throws Exception
+     */
+    public function actionUpdateLineItem(): Response
+    {
+        $this->requireAcceptsJson();
+        $this->requirePostRequest();
+
+        $request = Craft::$app->getRequest();
+        $orderNumber = $request->getBodyParam('orderNumber');
+        $items = $request->getBodyParam('items');
+
+        if ($orderNumber) {
+            $order = Order::find()->number($orderNumber)->one();
+        } else {
+            $order = new Order();
+
+            foreach ($items as $item) {
+                $lineItem = Commerce::getInstance()?->lineItems->create(
+                    $order,
+                    [
+                        'purchasableId' => $item['id'],
+                        'qty' => $item['qty']
+                    ]
+                );
+                $order->addLineItem($lineItem);
+            }
+        }
+
+        if (!$order) {
+            return $this->asJson([
+                'message' => 'Could not find order',
+            ])->setStatusCode(400);
+        }
+
+        // Add adjustments. We can't use $order->recalculate, because to use it the order needs an id. Saving the order
+        // at this point is not a good idea, because we can't delete it using the oncancel event
+        foreach (Commerce::getInstance()->getOrderAdjustments()->getAdjusters() as $adjuster) {
+            /** @var string|AdjusterInterface $adjuster */
+            $adjuster = Craft::createObject($adjuster);
+            $adjustments = $adjuster->adjust($order);
+            $order->setAdjustments(array_merge($order->getAdjustments(), $adjustments));
+        }
+
+        $lineItems = [];
+        foreach ($order->getLineItems() as $lineItem) {
+            $lineItems[] = [
+                'name' => $lineItem->purchasable->title,
+                'amount' => $lineItem->total * 100,
+                // 'amount' => (int)(($lineItem->salePrice + $lineItem->discount + $lineItem->tax) * 100) * $lineItem->qty,
+            ];
+        }
+
+        return $this->asJson([
+            'lineItems' => $lineItems,
+            'label' => Craft::t('commerce', 'Total'),
+            'amount' => (int)($order->getTotal() * 100),
         ]);
     }
 }
