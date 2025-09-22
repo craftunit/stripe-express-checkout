@@ -194,7 +194,7 @@ You can find all the options in the [Stripe documentation](https://docs.stripe.c
 | Class                | Event                                             |
 |----------------------|---------------------------------------------------|
 | StripeController     | `EVENT_BEFORE_UPDATE_SHIPPING_RATE`               |
-| StripeController     | `EVENT_AFTER_UPDATE_SHIPPING_RAT`E                |
+| StripeController     | `EVENT_AFTER_UPDATE_SHIPPING_RATE`                |
 | StripeController     | `EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_BEFORE_SAVE` |
 | StripeController     | `EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_AFTER_SAVE`  |
 | ProcessStripeWebhook | `EVENT_MODIFY_ORDER_DETAILS`                      |
@@ -205,6 +205,7 @@ You can find all the options in the [Stripe documentation](https://docs.stripe.c
 | ProcessStripeWebhook | `EVENT_BEFORE_SET_ORDER_CUSTOMER`                 |
 | ProcessStripeWebhook | `EVENT_WEBHOOK_FAILED`                            |
 | ProcessStripeWebhook | `EVENT_RECEIVED_WEBHOOK`                          |
+| ProcessStripeWebhook | `EVENT_BEFORE_UPDATE_ORDER_WITH_ORDER_DETAILS`    |
 
 ### Frontend JS
 

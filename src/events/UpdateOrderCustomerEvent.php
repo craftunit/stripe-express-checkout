@@ -7,7 +7,7 @@ use yii\base\Event;
 
 class UpdateOrderCustomerEvent extends Event
 {
-    public function __construct(public readonly User $user, $config = [])
+    public function __construct(public User $user, $config = [])
     {
         parent::__construct($config);
     }

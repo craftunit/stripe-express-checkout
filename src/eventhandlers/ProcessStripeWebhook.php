@@ -11,8 +11,8 @@ use craft\commerce\stripe\base\Gateway;
 use craft\commerce\stripe\gateways\PaymentIntents;
 use craft\elements\Address;
 use craft\errors\ElementNotFoundException;
-use craft\fields\PlainText;
 use craftunit\craftstripeexpresscheckout\enums\AddressType;
+use craftunit\craftstripeexpresscheckout\events\UpdateOrderWithOrderDetails;
 use craftunit\craftstripeexpresscheckout\events\ModifyOrderDetailsEvent;
 use craftunit\craftstripeexpresscheckout\events\ReceiveStripeWebhookEvent;
 use craftunit\craftstripeexpresscheckout\events\UpdateAddressEvent;
@@ -33,6 +33,8 @@ class ProcessStripeWebhook implements EventHandlerInterface
     public const EVENT_BEFORE_SAVE_BILLING_ADDRESS = 'beforeSaveBillingAddress';
     public const EVENT_AFTER_SAVE_BILLING_ADDRESS = 'afterSaveBillingAddress';
     public const EVENT_BEFORE_SET_ORDER_CUSTOMER = 'beforeSetOrderCustomer';
+
+    public const EVENT_BEFORE_UPDATE_ORDER_WITH_ORDER_DETAILS = 'beforeUpdateOrderWithOrderDetails';
     public const EVENT_WEBHOOK_FAILED = 'webhookFailed';
     public const EVENT_RECEIVED_WEBHOOK = 'receiveWebhook';
 
@@ -145,12 +147,11 @@ class ProcessStripeWebhook implements EventHandlerInterface
      */
     private function updateOrderDetails(Order $order, array $orderDetails): bool
     {
-        $settings = StripeExpressCheckout::getInstance()->settings;
-        if ($settings->phoneField && !empty($orderDetails['billing_details']['phone'])) {
-            $fieldUid = $settings->phoneField;
-            /* @var $field PlainText */
-            $field = Craft::$app->fields->getFieldByUid($fieldUid);
-            $order->setFieldValue($field->handle, $orderDetails['billing_details']['phone']);
+        if (Event::hasHandlers(self::class, self::EVENT_BEFORE_UPDATE_ORDER_WITH_ORDER_DETAILS)) {
+            Event::trigger(self::class,
+                self::EVENT_BEFORE_UPDATE_ORDER_WITH_ORDER_DETAILS,
+                new UpdateOrderWithOrderDetails($order, $orderDetails)
+            );
         }
 
         return Craft::$app->elements->saveElement($order);
@@ -250,7 +251,7 @@ class ProcessStripeWebhook implements EventHandlerInterface
         };
 
         if (Event::hasHandlers(self::class, $eventType)) {
-            Event::trigger(self::class, $eventType, new UpdateAddressEvent($address));
+            Event::trigger(self::class, $eventType, new UpdateAddressEvent($address, $addressData));
         }
 
         if (!Craft::$app->elements->saveElement($address)) {
@@ -263,7 +264,7 @@ class ProcessStripeWebhook implements EventHandlerInterface
         };
 
         if (Event::hasHandlers(self::class, $eventType)) {
-            Event::trigger(self::class, $eventType, new UpdateAddressEvent($address));
+            Event::trigger(self::class, $eventType, new UpdateAddressEvent($address, $addressData));
         }
 
         return $address;
