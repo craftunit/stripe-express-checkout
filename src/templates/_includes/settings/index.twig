@@ -33,15 +33,6 @@
       checked: settings.phoneNumberRequired,
       tip: _self.stripeDocLink('js/element/events/on_click?type=expressCheckoutElement#element_on_click-handler-resolve-phoneNumberRequired', 'phoneNumberRequired')
     }) }}
-    {{ forms.selectField({
-      name: 'phoneField',
-      instructions: 'Map the phone number to plain text on the order field layout. This will only take effect if you enable \'Phone Number Required\'.',
-      label: 'Phone Field',
-      options: fields,
-      value: settings.phoneField,
-      errors: settings.getErrors('phoneField'),
-      required: false,
-    }) }}
     {{ forms.checkboxField({
       label: 'Restrict countries',
       name: 'restrictCountries',

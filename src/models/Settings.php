@@ -52,15 +52,13 @@ class Settings extends Model
     public string $showPayPal = ShowWallet::Auto->value;
     public string $showLink = ShowWallet::Auto->value;
     public string $showAmazonPay = ShowWallet::Auto->value;
-    public ?string $phoneField = null;
 
     protected function defineRules(): array
     {
         return array_merge(parent::defineRules(), [
             [['gatewayId', 'successUrl'], 'required'],
-            [['gatewayId', 'successUrl', 'loaderTemplate', 'phoneField'], 'string'],
+            [['gatewayId', 'successUrl', 'loaderTemplate'], 'string'],
             [['shippingAddressRequired', 'phoneNumberRequired', 'restrictCountries'], 'boolean'],
-            [['phoneField'], 'required', 'when' => fn() => $this->phoneNumberRequired],
             [['maxColumns', 'maxRows'], 'integer', 'min' => 0],
             [['buttonHeight'], 'integer', 'min' => 40, 'max' => 55],
             [['overflow'], 'in', 'range' => Overflow::asValues()],
