@@ -28,6 +28,10 @@ class PaymentRequest extends Component
                 continue;
             }
 
+            if (!$shippingMethod->matchOrder($order)) {
+                continue;
+            }
+
             $shippingRates[] = [
                 'id' => $shippingMethod->handle,
                 'displayName' => $shippingMethod->name,
