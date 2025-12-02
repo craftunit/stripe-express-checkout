@@ -2,7 +2,7 @@
     "name": "craft-unit/craft-stripe-express-checkout",
     "description": "Adding the Stripe Express Checkout to Commerce-Stripe.",
     "type": "craft-plugin",
-    "license": "mit",
+    "license": "proprietary",
     "support": {
         "email": "technik@craft-unit.de"
     },
