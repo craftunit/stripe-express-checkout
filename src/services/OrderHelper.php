@@ -26,12 +26,16 @@ class OrderHelper extends Component
      * @throws InvalidConfigException
      * @throws Exception
      */
-    public function fromItems(array $items): OrderElement
+    public function fromItems(array $items, ?int $siteId = null): OrderElement
     {
         // throw error if no items are provided
         if (empty($items)) {
             throw new RuntimeException('No items provided');
         }
+
+        $site = $siteId
+            ? Craft::$app->getSites()->getSiteById($siteId)
+            : Craft::$app->getSites()->getCurrentSite();
 
         // Create a new order from the request
         $order = Craft::createObject(
@@ -40,11 +44,16 @@ class OrderHelper extends Component
                 // TODO: Order number does not get set for some reason; maybe not save?
                 'number' => Commerce::getInstance()?->getCarts()->generateCartNumber(),
                 'lastIp' => Craft::$app->getRequest()->userIP,
-                'orderLanguage' => Craft::$app->getSites()->getCurrentSite()->language,
+                'orderLanguage' => $site->language,
+                'orderSiteId' => $site->id,
                 'currency' => Commerce::getInstance()?->getCarts()->getCart()->currency,
             ],
         );
         $order->number = Commerce::getInstance()?->getCarts()->generateCartNumber();
+
+        // createObject($class, $params) takes positional args, not Yii config — site fields above don't stick, so set them here.
+        $order->orderSiteId = $site->id;
+        $order->orderLanguage = $site->language;
 
         // Save order
         if (!Craft::$app->getElements()->saveElement($order)) {
@@ -80,14 +89,17 @@ class OrderHelper extends Component
     {
         $items = Json::decodeIfJson($request->getBodyParam('items'));
         $orderNumber = $request->getBodyParam('orderNumber');
+        $siteId = $request->getBodyParam('siteId');
+        $siteId = $siteId !== null ? (int)$siteId : null;
 
         if ($orderNumber) {
             $order = Commerce::getInstance()?->getOrders()->getOrderByNumber($orderNumber);
         } elseif (!empty($items)) {
-            $order = $this->fromItems($items);
+            $order = $this->fromItems($items, $siteId);
         } else {
             $order = Commerce::getInstance()?->getCarts()->getCart();
         }
+
 
         return $order;
     }

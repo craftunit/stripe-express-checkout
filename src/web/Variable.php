@@ -32,7 +32,6 @@ class Variable
      */
     public function buttons(array $options = []): string
     {
-
         /* @var Order $order */
         if (!empty($options['cart'])) {
             $order = $options['cart'];
@@ -137,6 +136,7 @@ class Variable
             'country' => $store->settings->getLocationAddress()->countryCode,
             'currency' => strtolower($order->currency),
             'stripeApiKey' => App::parseEnv($settings->gateway['publishableKey']),
+            'siteId' => Craft::$app->getSites()->getCurrentSite()->id,
             'style' => [],
         ], $options);
 

@@ -84,6 +84,7 @@ class StripeExpressCheckout {
       items: this.options.items,
       currency: this.options.currency,
       orderNumber: this.orderNumber,
+      siteId: this.options.siteId,
     };
   }
 
@@ -130,6 +131,7 @@ class StripeExpressCheckout {
         purchasableId,
         qty,
         items: this.options.items,
+        siteId: this.options.siteId,
         ...(this.orderNumber && { orderNumber: this.orderNumber })
       })
     });
@@ -154,6 +156,7 @@ class StripeExpressCheckout {
         [window.csrfTokenName]: window.csrfTokenValue,
         address,
         items: this.options.items,
+        siteId: this.options.siteId,
         ...(this.orderNumber && { orderNumber: this.orderNumber })
       })
     });
@@ -190,6 +193,7 @@ class StripeExpressCheckout {
         [window.csrfTokenName]: window.csrfTokenValue,
         shippingRateHandle: shippingRate.id,
         items: this.options.items,
+        siteId: this.options.siteId,
         orderNumber: this.orderNumber,
       })
     });
@@ -237,6 +241,7 @@ class StripeExpressCheckout {
         body: JSON.stringify({
           [window.csrfTokenName]: window.csrfTokenValue,
           orderNumber: this.orderNumber,
+          siteId: this.options.siteId,
         })
       });
       return;
@@ -252,6 +257,7 @@ class StripeExpressCheckout {
       body: JSON.stringify({
         [window.csrfTokenName]: window.csrfTokenValue,
         orderNumber: this.orderNumber,
+        siteId: this.options.siteId,
       })
     });
     const jsonResponse = await res.json();
