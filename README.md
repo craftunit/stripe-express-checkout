@@ -239,9 +239,9 @@ window.addEventListener('stripe-express-checkout:init', event => {
 
 #### Public Methods
 
-| Method Name  | Parameters              | Description                  |
-|--------------|-------------------------|------------------------------|
-| `setItemQty` | id: number, qty: number | Set the quantity of an item. |
+| Method Name  | Parameters               | Description                                                              |
+|--------------|--------------------------|--------------------------------------------------------------------------|
+| `setItemQty` | qty: number, id?: number | Set the quantity of an item. If `id` is omitted, the first item is used. |
 
 #### Example
 
@@ -272,7 +272,7 @@ Below is a example showing how to manipulate the quantity of a product in the ca
       quantityInput.addEventListener('input', event => {
         const qty = parseInt(event.target.value, 10);
         // Set the quantity of the item
-        instance.setItemQty({{ variant.id }}, qty);
+        instance.setItemQty(qty, {{ variant.id }});
       });
     });
   </script>
