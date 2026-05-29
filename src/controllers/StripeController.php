@@ -80,6 +80,8 @@ class StripeController extends Controller
             /* @var PaymentIntentForm $paymentForm */
             $paymentForm = $settings->gateway->getPaymentFormModel();
 
+            Craft::$app->params['stripeExpressCheckout'] = true;
+
             $this->payments->processPayment(
                 $order,
                 $paymentForm,
