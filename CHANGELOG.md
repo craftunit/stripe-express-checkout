@@ -2,6 +2,11 @@
 
 
 
+## 1.0.6 - 2026-07-02
+### Added
+- New `Variable::EVENT_MODIFY_BUTTON_OPTIONS` event (`ModifyButtonOptionsEvent`), fired before the express checkout buttons are rendered. Handlers can modify the options passed to the client side `StripeExpressCheckout.init()` call.
+- The client side element now forwards a `paymentMethodConfiguration` option (if set) to `stripe.elements()`, so host projects can control which payment methods the Express Checkout Element displays (set it via `EVENT_MODIFY_BUTTON_OPTIONS`).
+
 ## 1.0.5 - 2026-05-29
 ### Added
 - The express checkout request now flags itself via `Craft::$app->params['stripeExpressCheckout']` before processing payment. Host projects can read this flag (e.g. in an `EVENT_BUILD_GATEWAY_REQUEST` handler) to distinguish the express checkout flow from the regular onsite checkout, since both run through `PaymentIntents::createPaymentIntent`.

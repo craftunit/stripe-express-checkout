@@ -9,17 +9,41 @@ use craft\commerce\models\LineItem;
 use craft\commerce\models\ShippingMethod;
 use craft\commerce\Plugin as Commerce;
 use craft\helpers\App;
+use craftunit\craftstripeexpresscheckout\events\ModifyButtonOptionsEvent;
 use craftunit\craftstripeexpresscheckout\Plugin as StripeExpressCheckout;
 use craftunit\craftstripeexpresscheckout\web\assets\expresscheckout\ExpressCheckoutAsset;
 use Throwable;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use yii\base\Event;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 
 class Variable
 {
+    /**
+     * @event ModifyButtonOptionsEvent The event that is triggered before the express
+     * checkout buttons are rendered. Handlers may modify `$event->options` to override
+     * the options passed to the client side `StripeExpressCheckout.init()` call, e.g. to
+     * set a `paymentMethodConfiguration`:
+     *
+     * ```php
+     * use craftunit\craftstripeexpresscheckout\events\ModifyButtonOptionsEvent;
+     * use craftunit\craftstripeexpresscheckout\web\Variable;
+     * use yii\base\Event;
+     *
+     * Event::on(
+     *     Variable::class,
+     *     Variable::EVENT_MODIFY_BUTTON_OPTIONS,
+     *     function (ModifyButtonOptionsEvent $event) {
+     *         $event->options['paymentMethodConfiguration'] = 'pmc_...';
+     *     }
+     * );
+     * ```
+     */
+    public const EVENT_MODIFY_BUTTON_OPTIONS = 'modifyButtonOptions';
+
     /**
      * @param array $options
      * @return string
@@ -139,6 +163,16 @@ class Variable
             'siteId' => Craft::$app->getSites()->getCurrentSite()->id,
             'style' => [],
         ], $options);
+
+        // Let host projects override the options passed to the client side element
+        // (e.g. inject a `paymentMethodConfiguration` to control which methods show).
+        if (Event::hasHandlers(self::class, self::EVENT_MODIFY_BUTTON_OPTIONS)) {
+            Event::trigger(
+                self::class,
+                self::EVENT_MODIFY_BUTTON_OPTIONS,
+                new ModifyButtonOptionsEvent($options, $order)
+            );
+        }
 
         $view->registerJsFile('https://js.stripe.com/v3/');
         $view->registerAssetBundle(ExpressCheckoutAsset::class);

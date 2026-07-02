@@ -60,11 +60,20 @@ class StripeExpressCheckout {
 
   /* GETTERS */
   get #elementOptions() {
-    return {
+    const options = {
       mode: 'payment',
       currency: this.options.currency,
       amount: this.options.amount,
+    };
+
+    // Optional: restrict/customize the shown payment methods via a Stripe
+    // payment method configuration. Settable server side through the
+    // `EVENT_MODIFY_BUTTON_OPTIONS` event.
+    if (this.options.paymentMethodConfiguration) {
+      options.paymentMethodConfiguration = this.options.paymentMethodConfiguration;
     }
+
+    return options;
   }
 
   get #expressCheckoutOptions() {

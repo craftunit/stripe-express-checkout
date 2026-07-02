@@ -193,6 +193,7 @@ You can find all the options in the [Stripe documentation](https://docs.stripe.c
 
 | Class                | Event                                             |
 |----------------------|---------------------------------------------------|
+| Variable             | `EVENT_MODIFY_BUTTON_OPTIONS`                     |
 | StripeController     | `EVENT_BEFORE_UPDATE_SHIPPING_RATE`               |
 | StripeController     | `EVENT_AFTER_UPDATE_SHIPPING_RATE`                |
 | StripeController     | `EVENT_UPDATE_SHIPPING_ADDRESS_ORDER_BEFORE_SAVE` |
@@ -206,6 +207,30 @@ You can find all the options in the [Stripe documentation](https://docs.stripe.c
 | ProcessStripeWebhook | `EVENT_WEBHOOK_FAILED`                            |
 | ProcessStripeWebhook | `EVENT_RECEIVED_WEBHOOK`                          |
 | ProcessStripeWebhook | `EVENT_BEFORE_UPDATE_ORDER_WITH_ORDER_DETAILS`    |
+
+#### `Variable::EVENT_MODIFY_BUTTON_OPTIONS`
+
+Fired right before the buttons are rendered. Modify `$event->options` to override the
+options passed to the client side `StripeExpressCheckout.init()` call. Setting
+`paymentMethodConfiguration` lets you control which payment methods the Express Checkout
+Element displays (e.g. a different set than the regular onsite checkout):
+
+```php
+use craftunit\craftstripeexpresscheckout\events\ModifyButtonOptionsEvent;
+use craftunit\craftstripeexpresscheckout\web\Variable;
+use craft\helpers\App;
+use yii\base\Event;
+
+Event::on(
+    Variable::class,
+    Variable::EVENT_MODIFY_BUTTON_OPTIONS,
+    function (ModifyButtonOptionsEvent $event) {
+        if ($pmc = App::env('STRIPE_EXPRESS_PMC')) {
+            $event->options['paymentMethodConfiguration'] = $pmc;
+        }
+    }
+);
+```
 
 ### Frontend JS
 
