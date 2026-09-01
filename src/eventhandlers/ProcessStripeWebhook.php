@@ -198,7 +198,7 @@ class ProcessStripeWebhook implements EventHandlerInterface
         }
 
         $billingAddress = null;
-        if (!empty($billingDetails['address']['line1'] && !empty($billingDetails['address']['city']) && !empty($billingDetails['address']['postal_code']))) {
+        if ($this->isUsableAddress($billingDetails)) {
             $billingAddress = $this->updateAddress($order, $billingDetails, AddressType::Billing);
             if ($billingAddress === null) {
                 return false;
@@ -213,7 +213,55 @@ class ProcessStripeWebhook implements EventHandlerInterface
             $order->setShippingAddress($billingAddress);
         }
 
+        if (!$this->ensureUsableBillingAddress($order, $shippingDetails)) {
+            return false;
+        }
+
         return Craft::$app->elements->saveElement($order);
+    }
+
+    private function isUsableAddress(array $addressDetails): bool
+    {
+        return !empty($addressDetails['address']['line1'])
+            && !empty($addressDetails['address']['city'])
+            && !empty($addressDetails['address']['postal_code']);
+    }
+
+    /**
+     * @throws ElementNotFoundException
+     * @throws Exception
+     * @throws JsonException
+     * @throws Throwable
+     */
+    private function ensureUsableBillingAddress(Order $order, array $shippingDetails): bool
+    {
+        $billingAddress = $order->getBillingAddress();
+
+        if ($billingAddress === null || $order->validate(['billingAddress'])) {
+            return true;
+        }
+
+        $errors = json_encode($order->getErrors('billingAddress'), JSON_THROW_ON_ERROR);
+
+        if (!$this->isUsableAddress($shippingDetails)) {
+            Craft::warning("Billing address rejected for order {$order->number} ({$errors}); no shipping address to fall back to", 'stripe');
+            return false;
+        }
+
+        Craft::warning("Billing address rejected for order {$order->number} ({$errors}); using the shipping address instead", 'stripe');
+
+        $billingAddress->setScenario(Address::SCENARIO_DEFAULT);
+
+        $shippingDetails['title'] = 'Rechnungsadresse';
+        $billingAddress = $this->updateAddress($order, $shippingDetails, AddressType::Billing);
+
+        if ($billingAddress === null) {
+            return false;
+        }
+
+        $order->setBillingAddress($billingAddress);
+
+        return $order->validate(['billingAddress']);
     }
 
     /**

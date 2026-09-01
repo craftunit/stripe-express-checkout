@@ -2,6 +2,11 @@
 
 
 
+## 1.0.7 - 2026-09-01
+### Fixed
+- The `charge.succeeded` webhook no longer aborts when the store rejects the billing address a wallet returns (most commonly a country that is not in the store's country list). The shipping address is used as the billing address instead, so the order keeps running through the regular status flow. Previously the order was left without a billing address and stuck in its initial status, while the payment had already been captured.
+- Corrected a misplaced closing parenthesis in the billing address completeness check, which evaluated all three `empty()` calls as a single boolean expression instead of checking each field.
+
 ## 1.0.6 - 2026-07-02
 ### Added
 - New `Variable::EVENT_MODIFY_BUTTON_OPTIONS` event (`ModifyButtonOptionsEvent`), fired before the express checkout buttons are rendered. Handlers can modify the options passed to the client side `StripeExpressCheckout.init()` call.
